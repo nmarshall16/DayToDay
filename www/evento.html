@@ -6,29 +6,42 @@
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
      <script>
-var showTemplateDialog = function() {
-  var dialog = document.getElementById('my-dialog');
+    var showTemplateDialog = function() {
+      var dialog = document.getElementById('my-dialog');
 
-  if (dialog) {
-    dialog.show();
-  } else {
-    ons.createElement('dialog.html', { append: true })
-      .then(function(dialog) {
+      if (dialog) {
         dialog.show();
-      });
-  }
-};
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+          });
+      }
+    };
 
-var hideDialog = function(id) {
-  document
-    .getElementById(id)
-    .hide();
-};
+    var showTemplateDialogTwo = function() {
+      var dialog = document.getElementById('my-dialog-ver');
+
+      if (dialog) {
+        dialog.show();
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+          });
+      }
+    };
+
+    var hideDialog = function(id) {
+      document
+        .getElementById(id)
+        .hide();
+    };
 
     $(document).ready(function(){
-      $(document).on('click','.btnFinish', function(){
-          $(this).css('background','#1094bc');
-          $(this).css('color','#FFFFFF');
+      $(document).on("click",".btnFinish", function(){
+        alert($(".btnGo").text());
+        $(".btnGo").css('background', "#FFFFFF");
       });
     });
   </script>
@@ -65,13 +78,13 @@ var hideDialog = function(id) {
         </div>
       </ons-toolbar>
       <ons-row >
-    <ons-col><ons-button class="btnFinish" style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
-    <ons-col><ons-button  style="width: 100%; " onclick="fn.load('terminados.html')" >Terminados</ons-button></ons-col>
+    <ons-col><ons-button  style="width: 100%; background: #1094bc; color: white;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
+    <ons-col><ons-button  style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('terminados.html')" >Terminados</ons-button></ons-col>
   </ons-row><br><br><br>
     <ons-row >
     <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
     <ons-col>Evento 1 <br><div style="font-size: 10px;">Martes 3 de Junio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
+    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px" onclick="showTemplateDialogTwo()"></ons-icon><br>Ver</ons-col>
     <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
   </ons-row>
   <br><br>
@@ -99,8 +112,86 @@ var hideDialog = function(id) {
   <ons-row>
     <ons-col></ons-col>
     <ons-col></ons-col>
-    <ons-col style=" text-align: right;"><br><a href="#" class="show-modal"  style="text-decoration: none; color: black;"><ons-icon icon="md-plus-circle" size="50px"></ons-icon></a></ons-col>
+    <ons-col style=" text-align: right;"><br><ons-icon icon="md-plus-circle" size="50px" onclick="fn.load('AddEvento.html')"></ons-icon></ons-col>
   </ons-row>
+  <ons-dialog id="my-dialog-ver">
+    <div style="text-align: center; padding: 10px;">
+      <ons-row>
+        <ons-col style="text-align: right;"><ons-icon icon="md-close" size="20px" onclick="hideDialog('my-dialog-ver')" ></ons-icon></ons-col>
+      </ons-row>
+      <ons-row>
+        <ons-col style="text-align: center;">
+          <label>
+              Participantes
+          </label>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+            <div style="border: black 1px solid; overflow-y: scroll; width: 100%; height: 100px;">
+              <ons-row>
+                <ons-col>
+                  <ons-icon icon="md-account" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <ons-icon style="color: #24e240;" icon="md-check" size="20px"></ons-icon>
+                  <ons-icon style="color: #24e240;" icon="md-check" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <div style="font-size: 13px;">Contacto 1</div>
+                </ons-col>
+              </ons-row>
+              <ons-row>
+                <ons-col>
+                  <ons-icon icon="md-account" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <ons-icon style="color: #24e240;" icon="md-check" size="20px"></ons-icon>
+                  <ons-icon style="color: #ED1919;" icon="md-close" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <div style="font-size: 13px;">Contacto 2</div>
+                </ons-col>
+              </ons-row>
+              <ons-row>
+                <ons-col>
+                  <ons-icon icon="md-account" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <ons-icon style="color: #ED1919;" icon="md-close" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <div style="font-size: 13px;">Contacto 3</div>
+                </ons-col>
+              </ons-row>
+              <ons-row>
+                <ons-col>
+                  <ons-icon icon="md-account" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <ons-icon style="color: #24e240;" icon="md-check" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <div style="font-size: 13px;">Contacto 4</div>
+                </ons-col>
+              </ons-row>
+              <ons-row>
+                <ons-col>
+                  <ons-icon icon="md-account" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <ons-icon style="color: #24e240;" icon="md-check" size="20px"></ons-icon>
+                  <ons-icon style="color: #ED1919;" icon="md-close" size="20px"></ons-icon>
+                </ons-col>
+                <ons-col>
+                  <div style="font-size: 13px;">Contacto 5</div>
+                </ons-col>
+              </ons-row>
+            </div>
+        </ons-col>
+      </ons-row>
+    </div>
+  </ons-dialog>
       <template id="terminados.html">
        <ons-page>
       <ons-toolbar>
@@ -114,8 +205,8 @@ var hideDialog = function(id) {
         </div>
       </ons-toolbar>
             <ons-row >
-    <ons-col><ons-button class="btnFinish" style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
-    <ons-col><ons-button  style="width: 100%;">Terminados</ons-button></ons-col>
+    <ons-col><ons-button  style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
+    <ons-col><ons-button  style="width: 100%; background: #1094bc; color: white;">Terminados</ons-button></ons-col>
   </ons-row><br><br><br>
     <ons-row >
     <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
@@ -153,7 +244,7 @@ var hideDialog = function(id) {
       <ons-toolbar>
         <div class="left">
             <ons-toolbar-button onclick="fn.load('home.html')">
-            <ons-icon icon="fa-close"></ons-icon>
+            <ons-icon icon="fa-angle-left"></ons-icon>
           </ons-toolbar-button>
         </div>
         <div class="center" style="text-align: center;">
@@ -278,7 +369,7 @@ var hideDialog = function(id) {
       </ons-row><br><br><br><br>
       <ons-row>
         <ons-col>
-        <ons-button class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-check" size="20px" ></ons-icon> Voy</ons-button>
+        <ons-button class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px" ></ons-icon> Voy</ons-button>
         </ons-col>
         <ons-col>
           <ons-button style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;" onclick="showTemplateDialog()"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px"  ></ons-icon> No voy</ons-button>
@@ -299,6 +390,118 @@ var hideDialog = function(id) {
         </p>
         </div>
       </ons-dialog>
+      </ons-page>
+  </template>
+  <template id="AddEvento.html">
+          <ons-page>
+      <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button onclick="fn.load('home.html')">
+            <ons-icon icon="fa-angle-left"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+          <label>Evento</label>
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-align-justify"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+      <ons-row>
+        <ons-col >
+          <br><br>
+          <ons-row>
+            <ons-col>
+              <div>Nombre Evento</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input placeholder="Nombre Evento"  type="text" style="border: #1094bc 2px solid; width: 90%;"></ons-input>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br><br>
+              <div>Ubicación</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input placeholder="Ubicación" type="text" style="border: #1094bc 2px solid; width: 90%;"></ons-input>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br><br>
+              <div>Fecha y Hora</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input type="date" style="border: #1094bc 2px solid; width: 80%;"></ons-input><ons-icon icon="md-calendar-note" size="20px" ></ons-icon>
+            </ons-col>
+          </ons-row>
+        </ons-col>
+        <ons-col >
+          <br><br>
+          <ons-row>
+            <ons-col>
+              <div>Participantes</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <br>
+            <div style="border: black 1px solid; overflow-y: scroll; width: 100%;">
+              <ons-list-item tappable>
+                  <label class="left">
+                    <ons-checkbox input-id="check-1"></ons-checkbox>
+                  </label>
+                  <label for="check-1" class="center">
+                      Contacto 1
+                  </label>
+              </ons-list-item>
+              <ons-list-item tappable>
+                <label class="left">
+                  <ons-checkbox input-id="check-2"></ons-checkbox>
+                </label>
+                <label for="check-2" class="center">
+                  Contacto 2
+                </label>
+              </ons-list-item>
+              <ons-list-item tappable>
+                    <label class="left">
+                      <ons-checkbox checked input-id="check-3"></ons-checkbox>
+                    </label>
+                    <label for="check-3" class="center">
+                     Contacto 3
+                    </label>
+              </ons-list-item>
+              <ons-list-item tappable>
+                <label class="left">
+                  <ons-checkbox input-id="check-4"></ons-checkbox>
+                </label>
+                <label for="check-4" class="center">
+                  Contacto 4
+                </label>
+              </ons-list-item>
+            </div>
+          </ons-row>
+        </ons-col>
+      </ons-row><br><br><br><br><br><br><br><br>
+      <ons-row>
+        <ons-col>
+        <ons-button class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;">Guardar</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;">Cancelar</ons-button>
+        </ons-col>
+      </ons-row>
       </ons-page>
   </template>
     <script src="cordova.js"></script>
