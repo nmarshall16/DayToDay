@@ -39,6 +39,73 @@
     };
 
     $(document).ready(function(){
+      /*
+        Llamadas a la tabla contacto de la base de datos
+        * La url que se debe ingresar es la siguiente: http://209.222.103.210/~prestash/contacto.php
+        * El type debe ser a traves de POST o post
+        * En data se encuentra la informacion mas importante aqui se deben indicar los datos que enviaremos al servidor para hacer las consultas a continuacion explicare cuales son los datos que se deben enviar para cada consulta.
+        - Para agregar un nuevo contacto data debe tener el siguiente formato
+          data: {
+          'metodo': 'agregarContacto',
+          'usuario_id': 1,
+          'contacto_id': 9,
+          }
+
+        - Para buscar un nuevo contacto data debe tener el siguiente formato:
+          data: {
+          'metodo': 'buscarContacto',
+          'usuario_id': 9,
+          'buscar': 'correo_ingresado',
+          }
+          nota: la busqueda se hace a través de el correo el electronico 
+
+        - Para cargar los contactos de un usuario especifico data debe tener el siguiente formato:
+          data: {
+          'metodo': 'verContactos',
+          'usuario_id': 8,
+          }
+
+        - Para borrar una contacto de un usuario data debe tener el siguiente formato: 
+          data: {
+          'metodo': 'borrarContactos',
+          'usuario_id': 1,
+          'contacto_id': 9,
+          }
+        por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
+        crossDomain: true,
+        cache: false,
+
+        A continuacion les muestro un ejemplo de como se cargar la lista de contactos a través de ajax
+      */
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/contacto.php',
+        type: 'post',
+        data: {
+          'metodo': 'verContactos',
+          'usuario_id': 9,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            $("#result").html(""); 
+            data['contactos'].forEach(function(contacto) {
+            $("#result").append("<li>"+contacto['nombre']+"</li>"); 
+            }); 
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
       $(document).on("click",".btnFinish", function(){
         alert($(".btnGo").text());
         $(".btnGo").css('background', "#FFFFFF");
