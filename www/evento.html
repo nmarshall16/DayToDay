@@ -9,18 +9,23 @@
   <script src="cordova.js"></script>
   <script src="js/app.js"></script>
   <script type="text/javascript">
-    var cual="btnpendientes";
+    var cual="pendientes";
     $(document).ready(function() {
       cargarDatos(cual);
     });
 
     $(document).on('click','#btnterminados',function() {
-      cual="btnterminados";
+      cual="terminados";
       cargarDatos(cual);
     });
 
     $(document).on('click','#btnpendientes',function() {
-      cual="btnpendientes";
+      cual="pendientes";
+      cargarDatos(cual);
+    });
+
+    $(document).on('click','.cargarPendientes',function() {
+      cual="pendientes";
       cargarDatos(cual);
     });
 
@@ -39,7 +44,7 @@
         success: function(data) {
           console.log(data);
           if(!data['errores']['error']) {
-            if (cual=="btnterminados") {
+            if (cual=="terminados") {
               $("#eterminados").html(""); 
               data['evento'].forEach(function(evento) {  
                 if (evento['estado']=='c') {
@@ -256,7 +261,7 @@
       <ons-page>
       <ons-toolbar>
         <div class="left">
-            <ons-toolbar-button onclick="fn.load('home.html')">
+            <ons-toolbar-button class="cargarPendientes" onclick="fn.load('home.html')">
             <ons-icon icon="fa-angle-left"></ons-icon>
           </ons-toolbar-button>
         </div>
@@ -409,7 +414,7 @@
           <ons-page>
       <ons-toolbar>
         <div class="left">
-            <ons-toolbar-button onclick="fn.load('home.html')">
+            <ons-toolbar-button class="cargarPendientes" onclick="fn.load('home.html')">
             <ons-icon icon="fa-angle-left"></ons-icon>
           </ons-toolbar-button>
         </div>
