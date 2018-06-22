@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/onsenui.css">
+  <link rel="stylesheet" href="css/onsen-css-components.min.css">
+  <script src="js/onsenui.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script>
+    var showTemplateDialog = function() {
+      var dialog = document.getElementById('my-dialog');
+        if (dialog) {
+          dialog.show();
+        } else {
+          ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+          dialog.show();
+        });
+      }
+    };
+
+    var hideDialog = function(id) {
+      document
+      .getElementById(id)
+      .hide();
+    };
+
+    $(document).ready(function(){
+      $(document).on('click','.btnFinish', function(){
+          $(this).css('background','#1094bc');
+          $(this).css('color','#FFFFFF');
+      });
+    });
+  </script>
+</head>
+
+<body>
+
+  <!--Creo que este es el menú-->
+  <ons-splitter>
+    <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
+      <ons-page>
+        <ons-list>
+          <ons-list-item onclick="fn.load('home.html')" tappable>
+            Actividades 
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('settings.html')" tappable>
+            Eventos
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('about.html')" tappable>
+            Contactos
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-splitter-side>
+    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+  </ons-splitter>
+
+  <!--Inicio de vista actividades "todas"-->
+  <template id="home.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <a href="actividades.html">
+            <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
+          </a>
+        </div>
+        <div class="center" style="text-align: center">
+          Frecuentes
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Botones de la barra de arriba-->
+      <ons-row >
+        <ons-col>
+          <ons-button class="btnFinish" style="width: 100%;" onclick="fn.load('home.html')">Todas</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('obligatorias.html')" >Obligatorias</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('entretencion.html')" >Diversión</ons-button>
+        </ons-col>
+      </ons-row><br><br><br>
+
+      <!--Una actividad-->
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
+          Actividad 1
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
+          Actividad 2
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
+          Actividad 3
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
+          Actividad 4
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <!--Botón agregar-->
+      <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
+        <ons-row>
+          <ons-col>
+            <ons-button style="width: 100%;text-align: center;" onclick="fn.load('actividad.html')">Agregar</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+
+      <!--Término de vista-->
+    </ons-page>
+  </template>
+
+  <!--Vista actividades obligatorias-->
+  <template id="obligatorias.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <a href="actividades.html">
+            <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
+          </a>
+        </div>
+        <div class="center" style="text-align: center">
+          Frecuentes
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Botones de la barra de arriba-->
+      <ons-row >
+        <ons-col>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="fn.load('home.html')">Todas</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button style="width: 100%;">Obligatorias</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('entretencion.html')" >Diversión</ons-button>
+        </ons-col>
+      </ons-row><br><br><br>
+
+      <!--Una actividad-->
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
+          Actividad 1
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
+          Actividad 3
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <!--Botón agregar-->
+      <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
+        <ons-row>
+          <ons-col>
+            <ons-button style="width: 100%;text-align: center;" onclick="fn.load('actividad.html')">Agregar</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+
+      <!--Término de vista-->
+    </ons-page>
+  </template>
+
+  <!--Vista de actividades de entretención-->
+  <template id="entretencion.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <a href="actividades.html">
+            <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
+          </a>
+        </div>
+        <div class="center" style="text-align: center">
+          Frecuentes
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Botones de la barra de arriba-->
+      <ons-row >
+        <ons-col>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="fn.load('home.html')">Todas</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('obligatorias.html')" >Obligatorias</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button style="width: 100%">Diversión</ons-button>
+        </ons-col>
+      </ons-row><br><br><br>
+
+      <!--Una actividad-->
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
+          Actividad 2
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%">
+          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
+          Actividad 4
+        </ons-col>
+        <ons-col style="margin-right: 10%; text-align: right;">
+          <ons-button style="background: #1094bc;">
+            <ons-icon icon="fa-trash" size="20px"></ons-icon>
+          </ons-button>
+        </ons-col>
+      </ons-row><br><br>
+
+      <!--Botón agregar-->
+      <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
+        <ons-row>
+          <ons-col>
+            <ons-button style="width: 100%;text-align: center;" onclick="fn.load('actividad.html')">Agregar</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+
+      <!--Término de vista-->
+    </ons-page>
+  </template>
+
+  <!--Vista para crear, ver y modificar una actividad-->
+  <template id="actividad.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.load('home.html')">
+            <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+          <label>Actividad</label>
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-align-justify"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Aquí parte el formulario-->
+      <br/>
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <div>Nombre de actividad</div>
+        </ons-col>
+      </ons-row><br/>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <ons-input placeholder="Nombre actividad" type="text" style="border:#1094bc 2px solid;width: 100%;">
+        </ons-col>
+      </ons-row><br/>
+
+      <!--Botones para ver si es obligatoria o de entretención-->
+      <ons-row >
+        <ons-col style="margin-left: 10%;">
+          <ons-button style="width: 100%;">Obligatoria</ons-button>
+        </ons-col>
+        <ons-col style="margin-right: 10%">
+          <ons-button style="width: 100%; background: #FFFFFF;color: black">Diversión</ons-button>
+        </ons-col>
+      </ons-row><br>
+
+      <!--Fecha y hora-->
+      <br/>
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <a href="#" class="show-modal"  style="text-decoration: none; color: black;">
+            <ons-icon icon="fa-plus" size="20px"></ons-icon>
+          </a>Agregar fecha y hora
+        </ons-col>
+      </ons-row><br/>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;">
+        </ons-col>
+      </ons-row><br/>
+
+      <!--Check para frecuentes-->
+      <div style="width: 90%; position: absolute;bottom: 5%; margin-left: 5%">
+        <ons-row style="margin-left: 10%">
+          <ons-col>
+            <label class="left">
+              <ons-checkbox input-id="check-1"></ons-checkbox>
+            </label>
+            <label for="check-1" class="center">
+              Marcar actividad como frecuente
+            </label>
+          </ons-col>
+        </ons-row>
+
+        <!--Botones para guardar y cancelar-->
+        <ons-row style="margin-top: 10%;">
+          <ons-col>
+            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;">Guardar</ons-button>
+          </ons-col>
+          <ons-col>
+            <ons-button style="background: #1094bc;width: 80%;">Cancelar</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+      
+    </ons-page>
+  </template>
+  <script src="cordova.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

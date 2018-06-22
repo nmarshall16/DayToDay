@@ -9,27 +9,87 @@
   <script src="cordova.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+      /*
+      Llamadas a la tabla evento de la base de datos
+        * La url que se debe ingresar es la siguiente: http://209.222.103.210/~prestash/evento.php
+        * El type debe ser a traves de POST o post
+        * En data se encuentra la informacion mas importante aqui se deben indicar los datos que enviaremos al servidor para hacer las consultas a continuacion explicare cuales son los datos que se deben enviar para cada consulta.
+        - Para agregar eventos data debe tener el siguiente formato
+          data: {
+          'metodo': 'agregar',
+          'usuario_id': 1,
+          'nombre': 'Nombre del evento',
+          'ubicacion': 'Ubicacion del evento',
+          'fecha': 'yyyy-mm-dd',
+          'hora': 'hh:mm:ss',
+          'participantes': participantes,
+          }
+          nota: la variable participantes debe ser un arreglo con el siguiente formato:
+                var participantes = [];
+                participantes[posicion_del_arreglo] = id_del_usuario_que_participara_del_evento;
+                ejemplo:
+                  participantes[0] = 12;
+
+        - Para modificar la informacion de un evento data debe tener el siguiente formato:
+          data: {
+          'metodo': 'modificar',
+          'evento_id': 8,
+          'nombre': 'Nombre del evento',
+          'ubicacion': 'Ubicacion del evento',
+          'fecha': 'yyyy-mm-dd',
+          'hora': 'hh:mm:ss',
+          'participantes': participantes,
+          }
+          nota: se agregaran solamente los participantes que no se encuentren asociados al evento este filtro se hace através de php por lo cual no es necesario que se envien solo los participantes nuevos que se quieren agregar.
+        - Para cargar la informacion de un evento especifico data debe tener el siguiente formato:
+          data: {
+          'metodo': 'verEvento',
+          'evento_id': 8,
+          }
+        - Para cargar todos los eventos en los que se encuentre el usuario asociado data debe tener el siguiente formato: 
+          data: {
+          'metodo': 'cargarEventos',
+          'usuario_id': 1,
+          }
+        por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
+        crossDomain: true,
+        cache: false,
+
+        A continuacion les muestro un ejemplo de como se cargar la lista de eventos a través de ajax
+      */
       $.ajax({
-        url: 'http://209.222.103.210/~prestash/actividad.php',
+        url: 'http://209.222.103.210/~prestash/evento.php',
         type: 'post',
-        dataType: 'json',
-        data: 'hola',                                        
+        data: {
+          'metodo': 'cargarEventos',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
         beforeSend: function() {
         },
         success: function(data) {
-          $("#result").html(""); 
-          for(var i in data){ 
-            $("#result").append("<li>"+data[i]['nombre']+"</li>"); 
-          } 
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            $("#result").html(""); 
+            data['evento'].forEach(function(evento) {
+            $("#result").append("<li>"+evento['nombre']+"</li>"); 
+            }); 
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
         },
         error:function(jqXHR,text_status,strError){ 
-        $("#result").html("");
+          console.log(jqXHR);
         }
       });
     });
   </script>
 </head>
-<body onload="init();">
+<body>
   <ons-splitter>
     <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
       <ons-page>
@@ -100,31 +160,6 @@
       </ons-toolbar>
     </ons-page>
   </template>
-  <script type="text/javascript">
-    function init(){ 
-      /*$.ajax({ 
-      type:'GET', 
-      url:'http://www.daytoday.epizy.com/bd/actividad.php?&jsoncallback=?',  
-      dataType:'JSONp',
-      success:function(data){ 
-        var myObj = JSON.parse(data);
-        console.log(myObj);
-        $("#result").html(""); 
-        for(var i in data){ 
-          $("#result").append("<li>"+data[i]['nombre']+"</li>"); 
-        } 
-      },
-      error:function(jqXHR,text_status,strError){ 
-        $("#result").html("");
-        $("#result").append("<li>"+jqXHR.responseText+"</li>");
-        $("#result").append("<li>"+jqXHR.status+"</li>");
-        $("#result").append("<li>"+text_status+"</li>");
-        $("#result").append("<li>"+strError+"</li>");
-      }
-      });
-      */
-    }
-</script>
 <script src="js/app.js"></script>
 </body>
 </html>
