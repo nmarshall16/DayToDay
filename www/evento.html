@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
   <link rel="stylesheet" href="css/onsenui.css">
   <link rel="stylesheet" href="css/onsen-css-components.min.css">
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
-     <script>
+  <script src="cordova.js"></script>
+  <script src="js/app.js"></script>
+  <script type="text/javascript">
+    var cual="btnpendientes";
+    $(document).ready(function() {
+      cargarDatos(cual);
+    });
+
+    $(document).on('click','#btnterminados',function() {
+      cual="btnterminados";
+      cargarDatos(cual);
+    });
+
+    $(document).on('click','#btnpendientes',function() {
+      cual="btnpendientes";
+      cargarDatos(cual);
+    });
+
+    var cargarDatos= function(cual){      
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'cargarEventos',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          if(!data['errores']['error']) {
+            if (cual=="btnterminados") {
+              $("#eterminados").html(""); 
+              data['evento'].forEach(function(evento) {  
+                if (evento['estado']=='c') {
+                  $("#eterminados").append("<ons-row ><ons-col><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' onclick='showTemplateDialogTwo()'></ons-icon><br>Ver</ons-col><ons-col><ons-button style='background: #1094bc;''>Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
+                }
+              });
+            }else{
+              $("#ependientes").html(""); 
+              data['evento'].forEach(function(evento) {
+                if (evento['estado']=='p') {
+                  $("#ependientes").append("<ons-row ><ons-col><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' onclick='showTemplateDialogTwo()'></ons-icon><br>Ver</ons-col><ons-col><ons-button style='background: #1094bc;''>Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
+                }
+              });
+            }
+          }else{
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    };
+
     var showTemplateDialog = function() {
       var dialog = document.getElementById('my-dialog');
 
@@ -78,42 +136,20 @@
         </div>
       </ons-toolbar>
       <ons-row >
-    <ons-col><ons-button  style="width: 100%; background: #1094bc; color: white;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
-    <ons-col><ons-button  style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('terminados.html')" >Terminados</ons-button></ons-col>
-  </ons-row><br><br><br>
-    <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 1 <br><div style="font-size: 10px;">Martes 3 de Junio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px" onclick="showTemplateDialogTwo()"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 2 <br><div style="font-size: 10px;">Jeves 13 de Junio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 3 <br><div style="font-size: 10px;">Lunes 5 de Julio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 4 <br><div style="font-size: 10px;">Miercoles 25 de Agosto</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row>
-    <ons-col></ons-col>
-    <ons-col></ons-col>
-    <ons-col style=" text-align: right;"><br><ons-icon icon="md-plus-circle" size="50px" onclick="fn.load('AddEvento.html')"></ons-icon></ons-col>
-  </ons-row>
+    <ons-col><ons-button style="width: 100%; background: #1094bc; color: white;">Pendientes</ons-button></ons-col>
+    <ons-col><ons-button id="btnterminados" style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('terminados.html')" >Terminados</ons-button></ons-col>
+  </ons-row><br><br>
+
+  <!--Aquí se cargan los eventos pendientes-->
+  <div id="ependientes" style="height: 75%; overflow: scroll;"></div>
+  
+  <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%;">
+    <ons-row>
+      <ons-col></ons-col>
+      <ons-col></ons-col>
+      <ons-col style=" text-align: right;"><br><ons-icon icon="md-plus-circle" size="50px" onclick="fn.load('AddEvento.html')"></ons-icon></ons-col>
+    </ons-row>
+  </div>
   <ons-dialog id="my-dialog-ver">
     <div style="text-align: center; padding: 10px;">
       <ons-row>
@@ -205,36 +241,13 @@
         </div>
       </ons-toolbar>
             <ons-row >
-    <ons-col><ons-button  style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
+    <ons-col><ons-button id="btnpendientes" style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
     <ons-col><ons-button  style="width: 100%; background: #1094bc; color: white;">Terminados</ons-button></ons-col>
-  </ons-row><br><br><br>
-    <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 1 <br><div style="font-size: 10px;">Martes 3 de Junio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 2 <br><div style="font-size: 10px;">Jeves 13 de Junio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 3 <br><div style="font-size: 10px;">Lunes 5 de Julio</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;">Ver evento</ons-button></ons-col>
-  </ons-row>
-  <br><br>
-  <ons-row >
-    <ons-col><ons-icon icon="md-time" size="30px"></ons-icon></ons-col>
-    <ons-col>Evento 4 <br><div style="font-size: 10px;">Miercoles 25 de Agosto</div></ons-col>
-    <ons-col style="text-align: center;"><ons-icon icon="md-account" size="30px"></ons-icon><br>Ver</ons-col>
-    <ons-col><ons-button style="background: #1094bc;" onclick="fn.load('verEventos.html')">Ver evento</ons-button></ons-col>
-  </ons-row>
+  </ons-row><br><br>
+    
+  <!--Aquí se insertan los eventos terminados-->
+  <div id="eterminados"></div>
+
     </ons-page>
   </template>
     </ons-page>
@@ -504,7 +517,5 @@
       </ons-row>
       </ons-page>
   </template>
-    <script src="cordova.js"></script>
-  <script src="js/app.js"></script>
 </body>
 </html>
