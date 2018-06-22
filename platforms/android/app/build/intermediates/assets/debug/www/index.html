@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
   <link rel="stylesheet" href="css/onsenui.css">
   <link rel="stylesheet" href="css/onsen-css-components.min.css">
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="cordova.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        dataType: 'json',
+        data: 'hola',                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          $("#result").html(""); 
+          for(var i in data){ 
+            $("#result").append("<li>"+data[i]['nombre']+"</li>"); 
+          } 
+        },
+        error:function(jqXHR,text_status,strError){ 
+        $("#result").html("");
+        }
+      });
+    });
+  </script>
 </head>
-<body>
+<body onload="init();">
   <ons-splitter>
     <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
       <ons-page>
         <ons-list>
           <ons-list-item onclick="fn.load('home.html')" tappable>
-            Actividades 
+            Actividades
           </ons-list-item>
           <ons-list-item onclick="fn.load('settings.html')" tappable>
             Eventos
@@ -46,6 +68,8 @@
       <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
         Swipe right to open the menu!
       </p>
+      <ul id="result">
+      </ul> 
     </ons-page>
   </template>
   <template id="settings.html">
@@ -76,6 +100,31 @@
       </ons-toolbar>
     </ons-page>
   </template>
-  <script src="js/app.js"></script>
+  <script type="text/javascript">
+    function init(){ 
+      /*$.ajax({ 
+      type:'GET', 
+      url:'http://www.daytoday.epizy.com/bd/actividad.php?&jsoncallback=?',  
+      dataType:'JSONp',
+      success:function(data){ 
+        var myObj = JSON.parse(data);
+        console.log(myObj);
+        $("#result").html(""); 
+        for(var i in data){ 
+          $("#result").append("<li>"+data[i]['nombre']+"</li>"); 
+        } 
+      },
+      error:function(jqXHR,text_status,strError){ 
+        $("#result").html("");
+        $("#result").append("<li>"+jqXHR.responseText+"</li>");
+        $("#result").append("<li>"+jqXHR.status+"</li>");
+        $("#result").append("<li>"+text_status+"</li>");
+        $("#result").append("<li>"+strError+"</li>");
+      }
+      });
+      */
+    }
+</script>
+<script src="js/app.js"></script>
 </body>
 </html>

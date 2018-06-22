@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Jun 14 22:43:43 CLT 2018
+#Sat Jun 16 13:41:37 CLT 2018
 210.set=ASSET
 14.set=ASSET
 180.file=C\:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\assets\\debug\\www\\css-components-src\\src\\components\\tabbar.css
