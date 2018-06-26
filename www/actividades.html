@@ -25,6 +25,96 @@
     };
 
     $(document).ready(function(){
+      /*
+      Llamadas a la tabla actividad de la base de datos
+        * La url que se debe ingresar es la siguiente: http://209.222.103.210/~prestash/actividad.php
+        * El type debe ser a traves de POST o post
+        * En data se encuentra la informacion mas importante aqui se deben indicar los datos que enviaremos al servidor para hacer las consultas a continuacion explicare cuales son los datos que se deben enviar para cada consulta.
+        - Para agregar actividades data debe tener el siguiente formato
+          data: {
+          'metodo': 'agregar',
+          'usuario_id': 1,
+          'nombre': 'actividad desde ajax',
+          'fecha': '2018-05-30',
+          'hora': '10:30:00',
+          'tipo': 'e',
+          'clase': 's'
+          'addFrecuente': false,
+          }
+          nota: Si no se especifica una fecha en el archivo php se le asignara una automaticamente y si no se le asigna una hora el valor se dejara como nulo pero siempre deben estar los dos valores tanto hora como fecha con los valores minimo en '' por ejemplo = 'fecha': ''
+          
+          Ya que actividad y actividad frecuente es practicamente lo mismo e decidido ocupar el mismo metodo pero se distinguen en el valor 'clase' el cual debe tener valor 's' cuando sea una actividad normal y 'f' cuando sea una actividad frecuente
+
+          El valor addFrecuente seria un bool que indicara si la actividad normal que se esta agregando tambien se guarde como frecuente
+
+          El valor tipo indica si la actividad es obligatoria ('o') o de entretencion ('e')  
+
+        - Para modificar la informacion de una actividad data debe tener el siguiente formato:
+          data: {
+          'metodo': 'modificar',
+          'actividad_id': 8,
+          'nombre': 'Nombre de la actividad',
+          'fecha': 'yyyy-mm-dd',
+          'hora': 'hh:mm:ss',
+          'tipo': 'o',
+          'estado': 'p', 
+          }
+
+        - Para eliminar una actividad data debe tener el siguiente formato:
+          data: {
+          'metodo': 'borrarActividad',
+          'actividad_id': 8,
+          }
+
+        - Para cambiar el estado de una actividad data debe tener el siguiente formato:
+          data: {
+          'actividad_id': 1,
+          'estado': 't',
+          }
+          nota: este metodo sera util a la hora de marcar una actividad como terminada (t) o como pendiente (p)
+
+        - Para cargar la informacion de una actividad especifica data debe tener el siguiente formato:
+          data: {
+          'metodo': 'verActividad',
+          'actividad_id': 8,
+          }
+
+        - Para cargar todos las actividades del usuario data debe tener el siguiente formato: 
+          data: {
+          'metodo': 'verActividades',
+          'usuario_id': 1,
+          }
+        por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
+        crossDomain: true,
+        cache: false,
+
+        A continuacion les muestro un ejemplo de como se cargar la lista de eventos a través de ajax
+      */
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
       $(document).on('click','.btnFinish', function(){
           $(this).css('background','#1094bc');
           $(this).css('color','#FFFFFF');
