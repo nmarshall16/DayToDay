@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+  <link rel="stylesheet" href="css/onsenui.css">
+  <link rel="stylesheet" href="css/onsen-css-components.min.css">
+  <script src="js/onsenui.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="cordova.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      /*
+      Llamadas a la tabla sugerencia de la base de datos
+        * La url que se debe ingresar es la siguiente: http://209.222.103.210/~prestash/sugerencia.php
+        * El type debe ser a traves de POST o post
+        * En data se encuentra la informacion mas importante aqui se deben indicar los datos que enviaremos al servidor para hacer las consultas a continuacion explicare cuales son los datos que se deben enviar para cada consulta.
+        - Para agregar sugerencias data debe tener el siguiente formato
+          data: {
+          'metodo': 'agregar',
+          'usuario_id': 1,
+          'nombre': 'Nombre de la sugerencia',
+          'descripcion': 'Descripcion de la sugerencia',
+          'imagen': 'imagen.jpg',
+          'categoria_id': 1,
+          }
+          nota: La categoria con id 1 es la de motivacion y la categoria con id 2 es la de concentracion, ademas el valor imagen debe tener el nombre la imagen que se valla a seleccionar con la extencion correspondiente como .jpg .png
+
+        - Para modificar la informacion de una sugerencia data debe tener el siguiente formato:
+          data: {
+          'metodo': 'modificar',
+          'sugerencia_id': 1,
+          'nombre': 'Nombre de la sugerencia',
+          'descripcion': 'Descripcion de la sugerencia',
+          'imagen': 'imagen.jpg',
+          'categoria_id': 1,
+          }
+     
+        - Para cargar la informacion de una sugerencia en especifico data debe tener el siguiente formato:
+          data: {
+          'metodo': 'verSugerencia',
+          'sugerencia_id': 1,
+          }
+
+        - Para cargar todos los eventos en los que se encuentre el usuario asociado data debe tener el siguiente formato: 
+          data: {
+          'metodo': 'cargarEventos',
+          'usuario_id': 1,
+          }
+        por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
+        crossDomain: true,
+        cache: false,
+
+        A continuacion les muestro un ejemplo de como se cargar la lista de eventos a través de ajax
+      */
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/sugerencia.php',
+        type: 'post',
+        data: {
+          'metodo': 'verSugerencia',
+          'usuario_id': 1,
+          'nombre': 'hola mundo',
+          'descripcion': 'el mundo es lendo',
+          'imagen': 'mundo.jpg',
+          'categoria_id': 2,
+          'sugerencia_id': 7,
+          'comentario': 'buena sugerencia',
+          'valor': 5,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <ons-splitter>
+    <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
+      <ons-page>
+        <ons-list>
+          <ons-list-item onclick="fn.load('home.html')" tappable>
+            Actividades
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('settings.html')" tappable>
+            Eventos
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('about.html')" tappable>
+            Contactos
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-splitter-side>
+    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+  </ons-splitter>
+  <template id="home.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button>
+            <ons-icon icon="fa-plus"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+          <label>Actividades</label>
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-align-justify"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+      <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+        Swipe right to open the menu!
+      </p>
+      <ul id="result">
+      </ul> 
+    </ons-page>
+  </template>
+  <template id="settings.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Settings
+        </div>
+      </ons-toolbar>
+    </ons-page>
+  </template>
+  <template id="about.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          About
+        </div>
+      </ons-toolbar>
+    </ons-page>
+  </template>
+<script src="js/app.js"></script>
+</body>
+</html>
