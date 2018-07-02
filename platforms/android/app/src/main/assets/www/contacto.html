@@ -77,13 +77,58 @@
 
         A continuacion les muestro un ejemplo de como se cargar la lista de contactos a través de ajax
       */
+
+      //ELIMINAR CONTACTO //
+        $(document).on('click','.trashDelete',function(){
+          var contactID = $(this).attr("trashID");
+          //alert("user: "+contactID );
+          $(document).on('click', '#DeleteContact', function(){
+                $.ajax({
+            url: 'http://209.222.103.210/~prestash/contacto.php',
+            type: 'post',
+              data: {
+              'metodo': 'borrarContactos',
+              'usuario_id': 7,
+              'contacto_id': contactID,
+              },
+            crossDomain: true,
+            cache: false,                                        
+            beforeSend: function() {
+            },
+            success: function(data) {
+              console.log(data);
+              // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+              if(!data['errores']['error']) {
+                console.log(data);
+                // Aqui hay un ejemplo de como mostrar los datos
+                $("#result").html("");
+                //$("#contactosNew").empty();
+                //alert("Borrado"); 
+              }else{
+                // Aqui podran ver el error que se genero
+                console.log(data['errores']['description']);
+              }
+              hideDialog('my-dialogDelete');
+              location.reload();
+            },
+            error:function(jqXHR,text_status,strError){ 
+              console.log(jqXHR);
+            }
+          });
+              });
+        /**/
+        });
+      // FIN ELIMINAR CONTACTO // 
+
+
+      // VER CONTACTOS //
         $.ajax({
         url: 'http://209.222.103.210/~prestash/contacto.php',
         type: 'post',
-        data: {
+          data: {
           'metodo': 'verContactos',
-          'usuario_id': 9,
-        },
+          'usuario_id': 7,
+          },
         crossDomain: true,
         cache: false,                                        
         beforeSend: function() {
@@ -92,10 +137,23 @@
           console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
+            console.log(data);
             // Aqui hay un ejemplo de como mostrar los datos
-            $("#result").html(""); 
-            data['contactos'].forEach(function(contacto) {
-            $("#result").append("<li>"+contacto['nombre']+"</li>"); 
+            $("#result").html("");
+            //$("#contactosNew").empty();
+            $("#ViewSee").empty(); 
+            data['contactos'].forEach(function(usuarios) {
+              $("#ViewSee").append("<ons-row trashID="+usuarios['id']+" class='trashDelete'><ons-col><ons-icon icon='fa-user' size='30px'></ons-icon></ons-col><ons-col>"+usuarios['nombre']+"<br><div style='font-size: 10px;'>"+usuarios['correo']+"</div></ons-col><ons-col></ons-col><ons-col style='text-align: right;'><ons-icon icon='fa-trash'  size='30px' onclick='showTemplateDialogTwo()' ></ons-icon></ons-col></ons-row><br><br>");
+
+             $(document).on('click','#iconADD',function(){
+              var propID = $(this).attr("tributID");
+                if (usuarios['id'] == propID) {
+              //alert(usuarios['correo']);
+              $("#inputBC").val(usuarios['correo']);
+              //alert("usuario "+contact['correo']+" agregado!");
+            }
+             });
+              console.log("Contacto: "+usuarios['correo']);
             }); 
           }else{
             // Aqui podran ver el error que se genero
@@ -106,6 +164,177 @@
           console.log(jqXHR);
         }
       });
+      // FIN VER CONTACTOS//
+
+      // BUSCAR USUARIOS //
+      $(document).on('keyup','#inputBC', function(){
+        //onclick="fn.load('searchContact.html')";
+        //showTemplateDialog();
+        var texto = $("#inputBC").val();
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/contacto.php',
+        type: 'post',
+         data: {
+          'metodo': 'buscarContacto',
+          'usuario_id': 7,
+          'buscar': texto,
+          },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            $("#result").html("");
+            $("#contactosNew").empty();
+            $("#contactField").empty(); 
+            data['usuarios'].forEach(function(usuarios) {
+              $("#contactField").append("<ons-row><ons-col style=' width:100%;'><label>"+usuarios['correo']+"</label></ons-col><ons-col></ons-col><ons-col style=' width:100%;  text-align:right;'><ons-icon icon='fa-user-plus' id='iconADD' tributID="+usuarios['id']+"></ons-icon></ons-col></ons-row>");
+
+             $(document).on('click','#iconADD',function(){
+              var propID = $(this).attr("tributID");
+                if (usuarios['id'] == propID) {
+              //alert(usuarios['correo']);
+              $("#inputBC").val(usuarios['correo']);
+              //alert("usuario "+contact['correo']+" agregado!");
+            }
+             });
+              console.log("Contacto: "+usuarios['correo']);
+            }); 
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+      });
+      //FIN BUSCAR USUARIOS //
+
+        //SETEAR USUARIO SELECCIONADO //
+        $(document).on('click','#iconADD',function(){
+        var propID = $(this).attr("tributID");
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/contacto.php',
+        type: 'post',
+          data: {
+          'metodo': 'verContactos',
+          'usuario_id': 7,
+          },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            
+           // console.log("Usuario: "+data);
+           data['contactos'].forEach(function(contact){
+            if (contact['id'] == propID) {
+              //alert(contact['correo']);
+              var textoL = contact['correo']+"**"+contact['id'];
+              var res = textoL.split("**");
+              $("#inputBC").val(res[0]);     
+             
+            }
+            
+           });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+      });
+
+      //FIN SETEAR USUARIO SELECCIONADO //
+
+
+        // AGREGAR CONTACTO //
+        $(document).on('click','#btnSearch', function(){
+          var txtPROP = $("#inputBC").val();
+          $.ajax({
+        url: 'http://209.222.103.210/~prestash/contacto.php',
+        type: 'post',
+          data: {
+          'metodo': 'buscarContacto',
+          'usuario_id': 7,
+          'buscar': txtPROP,
+          },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            
+           // console.log("Usuario: "+data);
+           data['usuarios'].forEach(function(contact){
+            if (contact['correo'] == txtPROP) {
+              //alert(contact['id']);
+               $("#textID").val(contact['id']);
+            }
+
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/contacto.php',
+        type: 'post',
+          data: {
+          'metodo': 'agregarContacto',
+          'usuario_id': 7,
+          'contacto_id': $("#textID").val(),
+          },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            //alert("Usuario añadido");
+             location.reload();
+           // console.log("Usuario: "+data);
+
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+            
+           });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+       /* */
+        });
+
+     //FIN AGREGAR CONTACTO //
+
       $(document).on("click",".btnFinish", function(){
         alert($(".btnGo").text());
         $(".btnGo").css('background', "#FFFFFF");
@@ -113,17 +342,13 @@
     });
   </script>
   <style type="text/css">
-    footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 52px;
-}
-  #dos{
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 113px;
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   color: white;
+   text-align: center;
 }
   </style>
 </head>
@@ -164,60 +389,18 @@
         </div>
       </ons-toolbar>
       <br><br>
-      <ons-row>
-        <ons-col >
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col >
-          Contacto 1 <br><div style="font-size: 10px;">Contacto@gmail.com</div>
-        </ons-col>
-        <ons-col  ></ons-col>
-        <ons-col style="  text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col >
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col >
-          Contacto 2 <br><div style="font-size: 10px;">ContactoNe@gmail.com</div>
-        </ons-col>
-        <ons-col></ons-col>
-        <ons-col style="  text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col >
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col >
-          Contacto 3 <br><div style="font-size: 10px;">ContactoTwo@gmail.com</div>
-        </ons-col>
-        <ons-col ></ons-col>
-        <ons-col style="  text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col >
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col >
-          Contacto 4 <br><div style="font-size: 10px;">ContactoFour@gmail.com</div>
-        </ons-col>
-        <ons-col ></ons-col>
-        <ons-col style=" text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <footer>
-        <ons-row>
-          <ons-col><div style="width: 100%; border-top: #1094 1px solid; border-left: #1094 1px solid; border-right: #1094 1px solid;"><br></div><ons-input onkeyup="fn.load('searchContact.html')"  style="width: 100%; border-left: #1094bc 1px solid; border-right: #1094bc 1px solid; border-bottom: #1094bc 1px solid;" trannsparent placeholder="Buscar conocidos"></ons-input></ons-col>
-          <ons-col style="text-align: center"><ons-button style="width: 100%; background: #1094bc; color: white; height: 52px;"><ons-icon icon="fa-user-plus"></ons-icon> Añadir</ons-button></ons-col>
+      <div id="ViewSee">
+        
+      </div><br><br>
+      <div id="contactField" style="border: black 1px solid; width: 100%; height: 300px; overflow-y: scroll;">
+        
+      </div>
+      <div class="footer">
+        <ons-row >
+          <ons-col><div style="width: 100%; border-top: #1094 1px solid; border-left: #1094 1px solid; border-right: #1094 1px solid;"><br></div><ons-input id="inputBC"  style="width: 100%; border-left: #1094bc 1px solid; border-right: #1094bc 1px solid; border-bottom: #1094bc 1px solid;" transparent placeholder="Buscar conocidos" txtID="-"></ons-input><input hidden id="textID"></input></ons-col>
+          <ons-col style="text-align: center"><ons-button id="btnSearch" style="width: 100%; background: #1094bc; color: white; height: 52px;" ><ons-icon icon="fa-user-plus"></ons-icon> Añadir</ons-button></ons-col>
         </ons-row>
-      </footer>
+      </div>
       <ons-dialog id="my-dialogDelete">
     <div style="text-align: center; padding: 10px;">
       <ons-row>
@@ -227,138 +410,23 @@
         <ons-col style="text-align: center;"><label>¿Esta seguro de que desea <br> eliminar este contacto</label></ons-col>
       </ons-row><br><br>
       <ons-row>
-        <ons-col><ons-button style="width: 100%; background: #1094bc; color: white;">Si</ons-button></ons-col>
-        <ons-col><ons-button style="width: 100%; background: #ED1919; color: white;">Cancelar</ons-button></ons-col>
+        <ons-col><ons-button id="DeleteContact" style="width: 100%; background: #1094bc; color: white;">Si</ons-button></ons-col>
+        <ons-col><ons-button id="CancelDelete" onclick="hideDialog('my-dialogDelete')" style="width: 100%; background: #ED1919; color: white;">Cancelar</ons-button></ons-col>
       </ons-row>
     </div>
   </ons-dialog>
-      </ons-page>
-  </template>
-  <template id="searchContact.html">
-    <ons-page>
-           <ons-toolbar>
-        <div class="left">
-          <ons-toolbar-button>
-            <ons-icon onclick="fn.load('home.html')" icon="fa-angle-left"></ons-icon>
-          </ons-toolbar-button>
-        </div>
-        <div class="center">
-          Contactos
-        </div>
-        <div class="right">
-          <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
-          </ons-toolbar-button>
-        </div>
-      </ons-toolbar>
-      <br><br>
-      <ons-row>
-        <ons-col>
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col>
-          Contacto 1 <br><div style="font-size: 10px;">Contacto@gmail.com</div>
-        </ons-col>
-        <ons-col></ons-col>
-        <ons-col style=" text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col>
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col>
-          Contacto 2 <br><div style="font-size: 10px;">ContactoNe@gmail.com</div>
-        </ons-col>
-        <ons-col></ons-col>
-        <ons-col style=" text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col>
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col>
-          Contacto 3 <br><div style="font-size: 10px;">ContactoTwo@gmail.com</div>
-        </ons-col>
-        <ons-col></ons-col>
-        <ons-col style=" text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col>
-          <ons-icon icon="fa-user" size="30px"></ons-icon>
-        </ons-col>
-        <ons-col>
-          Contacto 4 <br><div style="font-size: 10px;">ContactoFour@gmail.com</div>
-        </ons-col>
-        <ons-col></ons-col>
-        <ons-col style=" text-align: right;">
-          <ons-icon icon="fa-trash"  onclick="showTemplateDialogTwo()" size="30px"></ons-icon>
-        </ons-col>
-      </ons-row><br><br>
-      <footer id="dos">
-        <ons-row>
-          <ons-row>
-            <ons-col style="border: black 1px solid;"  onclick="showTemplateDialog()"><ons-icon icon="fa-user-plus"></ons-icon></ons-col>
-            <ons-col style="border: black 1px solid;"><label>CorreoNuevo@gmail.com</label></ons-col>
-            <ons-col></ons-col>
-             <ons-col></ons-col>
-              <ons-col></ons-col>
-              <ons-col></ons-col>
-               <ons-col></ons-col>
-          </ons-row>
-          <ons-row>
-            <ons-col style="border: black 1px solid;"  onclick="showTemplateDialog()"><ons-icon icon="fa-user-plus"></ons-icon></ons-col>
-            <ons-col style="border: black 1px solid;"><label>NicolasMarshall@gmail.com</label></ons-col>
-            <ons-col></ons-col>
-             <ons-col></ons-col>
-              <ons-col></ons-col>
-              <ons-col></ons-col>
-               <ons-col></ons-col>
-          </ons-row>
-          <ons-row>
-            <ons-col style="border: black 1px solid;"  onclick="showTemplateDialog()"><ons-icon icon="fa-user-plus"></ons-icon></ons-col>
-            <ons-col style="border: black 1px solid;"><label>PedroMarmol@gmail.com</label></ons-col>
-            <ons-col></ons-col>
-             <ons-col></ons-col>
-              <ons-col></ons-col>
-              <ons-col></ons-col>
-               <ons-col></ons-col>
-          </ons-row>
-          <ons-col><div style="width: 100%; border-top: #1094 1px solid; border-left: #1094 1px solid; border-right: #1094 1px solid;"><br></div><ons-input style="width: 100%; border-left: #1094bc 1px solid; border-right: #1094bc 1px solid; border-bottom: #1094bc 1px solid;" trannsparent placeholder="Buscar conocidos"></ons-input></ons-col>
-          <ons-col style="text-align: center"><ons-button style="width: 100%; background: #1094bc; color: white; height: 52px;"><ons-icon icon="fa-user-plus"></ons-icon> Añadir</ons-button></ons-col>
-        </ons-row>
-      </footer>
-      <ons-dialog id="my-dialog">
-    <div style="text-align: center; padding: 10px;">
-      <ons-row>
+   <ons-dialog id="my-dialog">
+       <ons-row>
         <ons-col style="text-align: right" onclick="hideDialog('my-dialog')"><ons-icon style="color: #1094bc;" icon="fa-close"></ons-icon></ons-col>
       </ons-row><br>
       <ons-row>
-        <ons-col style="text-align: center;"><label>Usuario Agregado!</label></ons-col>
-      </ons-row>
-    </div>
-  </ons-dialog>
-      <ons-dialog id="my-dialogDelete">
-    <div style="text-align: center; padding: 10px;">
-      <ons-row>
-        <ons-col style="text-align: right" onclick="hideDialog('my-dialogDelete')"><ons-icon style="color: #1094bc;" icon="fa-close"></ons-icon></ons-col>
+        <ons-col style="text-align: center;"><label>Contactos Encontrados!</label></ons-col>
       </ons-row><br>
-      <ons-row>
-        <ons-col style="text-align: center;"><label>¿Esta seguro de que desea <br> eliminar este contacto</label></ons-col>
-      </ons-row><br><br>
-      <ons-row>
-        <ons-col><ons-button style="width: 100%; background: #1094bc; color: white;">Si</ons-button></ons-col>
-        <ons-col><ons-button style="width: 100%; background: #ED1919; color: white;">Cancelar</ons-button></ons-col>
-      </ons-row>
+    <div id="contactosNew" style="border: black 1px solid; overflow-y: scroll; width: 100%; height: 100px;">
+
     </div>
   </ons-dialog>
-
-    </ons-page>
+      </ons-page>
   </template>
     <script src="cordova.js"></script>
   <script src="js/app.js"></script>

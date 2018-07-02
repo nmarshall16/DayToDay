@@ -41,30 +41,31 @@
           'sugerencia_id': 1,
           }
 
-        - Para cargar todos los eventos en los que se encuentre el usuario asociado data debe tener el siguiente formato: 
+        - Para cargar todos las sugerencias data debe tener el siguiente formato: 
           data: {
-          'metodo': 'cargarEventos',
-          'usuario_id': 1,
+          'metodo': 'verSugerencias',
           }
+
+        - Para valorar una sugerencia data debe tener el siguiente formato: 
+          data: {
+          'metodo': 'valorarSugerencia',
+          'sugerencia_id': 1,
+          'usuario_id': 1,
+          'valor': 5,
+          'comentario': 'buena sugerencia perro',
+          }
+	
         por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
         crossDomain: true,
         cache: false,
 
-        A continuacion les muestro un ejemplo de como se cargar la lista de eventos a través de ajax
+        A continuacion les muestro un ejemplo de como se cargar la lista de sugerencias a través de ajax
       */
       $.ajax({
         url: 'http://209.222.103.210/~prestash/sugerencia.php',
         type: 'post',
         data: {
-          'metodo': 'verSugerencia',
-          'usuario_id': 1,
-          'nombre': 'hola mundo',
-          'descripcion': 'el mundo es lendo',
-          'imagen': 'mundo.jpg',
-          'categoria_id': 2,
-          'sugerencia_id': 7,
-          'comentario': 'buena sugerencia',
-          'valor': 5,
+          'metodo': 'verSugerencias',
         },
         crossDomain: true,
         cache: false,                                        

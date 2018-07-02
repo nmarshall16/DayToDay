@@ -23,10 +23,8 @@
       .getElementById(id)
       .hide();
     };
-
-    $(document).ready(function(){
-      /*
-      Llamadas a la tabla actividad de la base de datos
+    /*
+    Llamadas a la tabla actividad de la base de datos
         * La url que se debe ingresar es la siguiente: http://209.222.103.210/~prestash/actividad.php
         * El type debe ser a traves de POST o post
         * En data se encuentra la informacion mas importante aqui se deben indicar los datos que enviaremos al servidor para hacer las consultas a continuacion explicare cuales son los datos que se deben enviar para cada consulta.
@@ -87,10 +85,30 @@
         por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
         crossDomain: true,
         cache: false,
-
-        A continuacion les muestro un ejemplo de como se cargar la lista de eventos a través de ajax
-      */
-      $.ajax({
+    */
+    var guardarActividad = function(){
+      var datos = $('#formGuardar').serialize();
+      var res = datos.split("&");
+      var valores = [];
+      res.forEach( function(element, index) {
+        var valor = element.split("=");
+        valores.push(valor);
+      });
+      valores.forEach( function(element, index) {
+        console.log(element);
+        console.log(index);
+      });
+      var nombre = $('#textNombre').val();
+      var tipo = $('input:radio[name=tipo]:checked').val();
+      var fecha = $('#dateFecha').val();
+      var frecuente = $('#checkFrecuente').val();
+      console.log(datos);
+      console.log(valores);
+    };
+    // Carga las actividades obligatorias
+    var cargarObligatorias = function(){
+        fn.load('obligatorias.html');
+        $.ajax({
         url: 'http://209.222.103.210/~prestash/actividad.php',
         type: 'post',
         data: {
@@ -102,10 +120,14 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-            
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['tipo'] == "o") {
+              $("#aObligatorias").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+actividad['nombre']+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+            }
+            });
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -114,7 +136,87 @@
         error:function(jqXHR,text_status,strError){ 
           console.log(jqXHR);
         }
-      });
+        });
+      };
+
+    // Carga las actividades de entretencion
+    var cargarEntretencion = function(){
+        fn.load('entretencion.html');
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['tipo'] == "e") {
+              $("#aEntretencion").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+actividad['nombre']+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+            }
+            });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+      // Carga todas las actividades sin filtrar
+      var cargarTodas = function(){
+        fn.load('home.html')
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            var icono = '';
+            // Se asigana el icono a la actividad obligitaria
+            if (actividad['tipo'] == "o") {
+              icono = "<ons-icon icon='fa-briefcase' size='30px'></ons-icon>";
+            }else if (actividad['tipo'] == "e") {
+              icono = "<ons-icon icon='fa-futbol-o' size='30px'></ons-icon>";
+            }
+            var elemento = "<ons-row><ons-col style='margin-left: 10%'>";
+            elemento += icono;
+            elemento += actividad['nombre']+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
+
+            $("#actividades").append(elemento); 
+            });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+    $(document).ready(function(){
       $(document).on('click','.btnFinish', function(){
           $(this).css('background','#1094bc');
           $(this).css('color','#FFFFFF');
@@ -123,14 +225,14 @@
   </script>
 </head>
 
-<body>
+<body onload="cargarTodas()">
 
   <!--Creo que este es el menú-->
   <ons-splitter>
     <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
       <ons-page>
         <ons-list>
-          <ons-list-item onclick="fn.load('home.html')" tappable>
+          <ons-list-item onclick="cargarTodas()" tappable>
             Actividades 
           </ons-list-item>
           <ons-list-item onclick="fn.load('settings.html')" tappable>
@@ -167,65 +269,18 @@
       <!--Botones de la barra de arriba-->
       <ons-row >
         <ons-col>
-          <ons-button class="btnFinish" style="width: 100%;" onclick="fn.load('home.html')">Todas</ons-button>
+          <ons-button class="btnFinish" style="width: 100%;">Todas</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('obligatorias.html')" >Obligatorias</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarObligatorias()" >Obligatorias</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('entretencion.html')" >Diversión</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarEntretencion()" >Diversión</ons-button>
         </ons-col>
-      </ons-row><br><br><br>
-
-      <!--Una actividad-->
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 1
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-futbol-o" size="30px"></ons-icon>
-          Actividad 2
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 3
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-futbol-o" size="30px"></ons-icon>
-          Actividad 4
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
+      </ons-row><br>
+      <div id="actividades" style="height: 70%; overflow: scroll;">
+        <!--Actividades-->
+      </div>
       <!--Barra de progreso-->
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
@@ -278,43 +333,20 @@
       </ons-toolbar>
 
       <!--Botones de la barra de arriba-->
-      <ons-row >
+      <ons-row>
         <ons-col>
-          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="fn.load('home.html')">Todas</ons-button>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="cargarTodas()">Todas</ons-button>
         </ons-col>
         <ons-col>
           <ons-button style="width: 100%;">Obligatorias</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('entretencion.html')" >Diversión</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarEntretencion()" >Diversión</ons-button>
         </ons-col>
-      </ons-row><br><br><br>
-
-      <!--Una actividad-->
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 1
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 3
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
+      </ons-row><br>
+      <div id="aObligatorias" style="height: 70%; overflow: scroll;">
+        <!--Actividades obligatorias-->
+      </div>
       <!--Barra de progreso-->
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
@@ -369,41 +401,19 @@
       <!--Botones de la barra de arriba-->
       <ons-row >
         <ons-col>
-          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="fn.load('home.html')">Todas</ons-button>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="cargarTodas()">Todas</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('obligatorias.html')" >Obligatorias</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarObligatorias()" >Obligatorias</ons-button>
         </ons-col>
         <ons-col>
           <ons-button style="width: 100%">Diversión</ons-button>
         </ons-col>
-      </ons-row><br><br><br>
-
-      <!--Una actividad-->
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-futbol-o" size="30px"></ons-icon>
-          Actividad 2
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-futbol-o" size="30px"></ons-icon>
-          Actividad 4
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <ons-button style="background: #1094bc;">
-            <ons-icon icon="fa-check" size="20px"></ons-icon>
-          </ons-button>
-        </ons-col>
-      </ons-row><br><br>
-
+      </ons-row><br>
+      <div id="aEntretencion" style="height: 70%; overflow: scroll;">
+        <!--Actividades de entretencion-->  
+      </div>
+      
       <!--Barra de progreso-->
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
@@ -441,7 +451,7 @@
     <ons-page>
       <ons-toolbar>
         <div class="left">
-          <ons-toolbar-button onclick="fn.load('home.html')">
+          <ons-toolbar-button onclick="cargarTodas()">
             <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
           </ons-toolbar-button>
         </div>
@@ -456,7 +466,8 @@
       </ons-toolbar>
 
       <!--Aquí parte el formulario-->
-      <br/>
+      <form method="post" id="formGuardar">
+        <br/>
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
           <div>Nombre de actividad</div>
@@ -465,17 +476,17 @@
 
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
-          <ons-input placeholder="Nombre actividad" type="text" style="border:#1094bc 2px solid;width: 100%;">
+          <ons-input placeholder="Nombre actividad" type="text" style="border:#1094bc 2px solid;width: 100%;" name="nombre" id="textNombre">
         </ons-col>
       </ons-row><br/>
 
       <!--Botones para ver si es obligatoria o de entretención-->
       <ons-row >
         <ons-col style="margin-left: 10%;">
-          <ons-button style="width: 100%;">Obligatoria</ons-button>
+          <ons-radio name="tipo" value="o" checked>Obligacion</ons-radio>
         </ons-col>
         <ons-col style="margin-right: 10%">
-          <ons-button style="width: 100%; background: #FFFFFF;color: black">Diversión</ons-button>
+          <ons-radio name="tipo" value="e">Entretencion</ons-radio>
         </ons-col>
       </ons-row><br>
 
@@ -491,7 +502,7 @@
 
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
-          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;">
+          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
         </ons-col>
       </ons-row><br/>
 
@@ -500,7 +511,7 @@
         <ons-row style="margin-left: 10%">
           <ons-col>
             <label class="left">
-              <ons-checkbox input-id="check-1"></ons-checkbox>
+              <ons-checkbox input-id="check-1" name="frecuente" id="checkFrecuente"></ons-checkbox>
             </label>
             <label for="check-1" class="center">
               Marcar actividad como frecuente
@@ -511,14 +522,14 @@
         <!--Botones para guardar y cancelar-->
         <ons-row style="margin-top: 10%;">
           <ons-col>
-            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;">Guardar</ons-button>
+            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;" onclick="guardarActividad()">Guardar</ons-button>
           </ons-col>
           <ons-col>
             <ons-button style="background: #1094bc;width: 80%;">Cancelar</ons-button>
           </ons-col>
         </ons-row>
       </div>
-      
+      </form>
     </ons-page>
   </template>
   <template>

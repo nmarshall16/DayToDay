@@ -66,6 +66,7 @@
 
         - Para cambiar el estado de una actividad data debe tener el siguiente formato:
           data: {
+          'metodo': 'cambiarEstado',
           'actividad_id': 1,
           'estado': 't',
           }
@@ -86,6 +87,82 @@
         crossDomain: true,
         cache: false,
     */
+    var guardarActividad = function(){
+      var datos = $('#formGuardar').serialize();
+      var res = datos.split("&");
+      var valores = [];
+      res.forEach( function(element, index) {
+        var valor = element.split("=");
+        valores.push(valor);
+      });
+      var nombre = "";
+      var tipo = "";
+      var fecha = "";
+      var frecuente = "";
+      var hora = "";
+      valores.forEach( function(element, index) {
+        switch (element[0]) {
+          case "nombre":
+            if (element[1] != "") {
+              nombre = $("#nameActividad").val();
+            }
+            break;
+          case "tipo":
+            if (element[1] != "") {
+              tipo = element[1];
+            } 
+            break;
+          case "fecha":
+            if (element[1] != "") {
+              datefecha = document.getElementById("dateFecha").value;
+              var ft = datefecha.split("T");
+              fecha = ft[0];
+              hora = ft[1]; 
+            }
+            break;
+          case "frecuente":
+            if (element[1] != "") {
+              frecuente = element[1]; 
+            }
+            break;
+        }
+      });
+      if (frecuente != "") {
+          frecuente = true;
+      }else{
+        frecuente = false;
+      }
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'agregar',
+          'usuario_id': 1,
+          'nombre': nombre,
+          'fecha': fecha,
+          'hora': hora,
+          'tipo': tipo,
+          'clase': 's',
+          'addFrecuente': frecuente,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            cargarTodas();
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+    };
     // Carga las actividades obligatorias
     var cargarObligatorias = function(){
         fn.load('obligatorias.html');
@@ -106,7 +183,13 @@
             $("#actividades").html("");
             data['actividades'].forEach(function(actividad) {
             if (actividad['tipo'] == "o") {
-              $("#aObligatorias").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+actividad['nombre']+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+              var nombre = '';
+              if (actividad['estado'] == "t") {
+                nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+              }else{
+                nombre = "<label> "+actividad['nombre']+"</label>";
+              }
+              $("#aObligatorias").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
             }
             });
           }else{
@@ -140,7 +223,13 @@
             $("#actividades").html("");
             data['actividades'].forEach(function(actividad) {
             if (actividad['tipo'] == "e") {
-              $("#aEntretencion").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+actividad['nombre']+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+              var nombre = '';
+              if (actividad['estado'] == "t") {
+                nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+              }else{
+                nombre = "<label> "+actividad['nombre']+"</label>";
+              }
+              $("#aEntretencion").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
             }
             });
           }else{
@@ -174,15 +263,22 @@
             $("#actividades").html("");
             data['actividades'].forEach(function(actividad) {
             var icono = '';
+            var nombre = '';
             // Se asigana el icono a la actividad obligitaria
             if (actividad['tipo'] == "o") {
               icono = "<ons-icon icon='fa-briefcase' size='30px'></ons-icon>";
             }else if (actividad['tipo'] == "e") {
               icono = "<ons-icon icon='fa-futbol-o' size='30px'></ons-icon>";
             }
+            if (actividad['estado'] == "t") {
+              nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+            }else{
+              nombre = "<label> "+actividad['nombre']+"</label>";
+            }
             var elemento = "<ons-row><ons-col style='margin-left: 10%'>";
             elemento += icono;
-            elemento += actividad['nombre']+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
+            elemento += nombre;
+            elemento += "</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
 
             $("#actividades").append(elemento); 
             });
@@ -202,6 +298,41 @@
           $(this).css('background','#1094bc');
           $(this).css('color','#FFFFFF');
       });
+      $(document).on('click','.actualizarE', function(){
+        var id = $(this).attr('identificador');
+        var estado = '';
+        if ($(this).attr('valor') == "t") {
+          estado = 'p';
+        }else{
+          estado = 't';
+        }
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'cambiarEstado',
+          'actividad_id': id,
+          'estado': estado,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            cargarTodas();
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      });
+      
     });
   </script>
 </head>
@@ -447,7 +578,8 @@
       </ons-toolbar>
 
       <!--Aquí parte el formulario-->
-      <br/>
+      <form method="post" id="formGuardar">
+        <br/>
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
           <div>Nombre de actividad</div>
@@ -456,17 +588,17 @@
 
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
-          <ons-input placeholder="Nombre actividad" type="text" style="border:#1094bc 2px solid;width: 100%;">
+          <ons-input placeholder="Nombre actividad" type="text" style="border:#1094bc 2px solid;width: 100%;" name="nombre" id="nameActividad">
         </ons-col>
       </ons-row><br/>
 
       <!--Botones para ver si es obligatoria o de entretención-->
       <ons-row >
         <ons-col style="margin-left: 10%;">
-          <ons-button style="width: 100%;">Obligatoria</ons-button>
+          <ons-radio name="tipo" value="o" checked>Obligacion</ons-radio>
         </ons-col>
         <ons-col style="margin-right: 10%">
-          <ons-button style="width: 100%; background: #FFFFFF;color: black">Diversión</ons-button>
+          <ons-radio name="tipo" value="e">Entretencion</ons-radio>
         </ons-col>
       </ons-row><br>
 
@@ -482,7 +614,7 @@
 
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
-          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;">
+          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
         </ons-col>
       </ons-row><br/>
 
@@ -491,7 +623,7 @@
         <ons-row style="margin-left: 10%">
           <ons-col>
             <label class="left">
-              <ons-checkbox input-id="check-1"></ons-checkbox>
+              <ons-checkbox input-id="check-1" name="frecuente" id="checkFrecuente"></ons-checkbox>
             </label>
             <label for="check-1" class="center">
               Marcar actividad como frecuente
@@ -502,14 +634,14 @@
         <!--Botones para guardar y cancelar-->
         <ons-row style="margin-top: 10%;">
           <ons-col>
-            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;">Guardar</ons-button>
+            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;" onclick="guardarActividad()">Guardar</ons-button>
           </ons-col>
           <ons-col>
             <ons-button style="background: #1094bc;width: 80%;">Cancelar</ons-button>
           </ons-col>
         </ons-row>
       </div>
-      
+      </form>
     </ons-page>
   </template>
   <template>
