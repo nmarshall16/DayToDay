@@ -18,6 +18,18 @@
       }
     };
 
+    var showFelicitacion = function() {
+      var dialog = document.getElementById('modal-progreso');
+        if (dialog) {
+          dialog.show();
+        } else {
+          ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+          dialog.show();
+        });
+      }
+    };
+
     var hideDialog = function(id) {
       document
       .getElementById(id)
@@ -192,6 +204,7 @@
               $("#aObligatorias").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
             }
             });
+            progreso(data['actividades'].length, data['actividades']);
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -232,6 +245,7 @@
               $("#aEntretencion").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
             }
             });
+            progreso(data['actividades'].length, data['actividades']);
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -279,9 +293,10 @@
             elemento += icono;
             elemento += nombre;
             elemento += "</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
-
             $("#actividades").append(elemento); 
             });
+            progreso(data['actividades'].length, data['actividades']);
+            // barraProgress
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -293,6 +308,19 @@
         });
       };
 
+    function progreso(total, actividades) {
+      var listas = 0;
+      actividades.forEach(function(actividad) {
+        if (actividad['estado'] == "t") {
+          listas++; 
+        }
+      });
+      var progreso = Math.trunc((100*listas)/total);
+      $(".barraProgress").attr('value', progreso);
+      if (progreso == 100) {
+        showFelicitacion();
+      }
+    }
     $(document).ready(function(){
       $(document).on('click','.btnFinish', function(){
           $(this).css('background','#1094bc');
@@ -397,7 +425,7 @@
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
           <ons-col>
-            <ons-progress-bar value="40" style="width: 100%" secondary-value="100"></ons-progress-bar>
+            <ons-progress-bar value="" style="width: 100%" secondary-value="100" class="barraProgress"></ons-progress-bar>
           </ons-col>
         </ons-row><br/>
       
@@ -418,6 +446,15 @@
           <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
           <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
         </p>
+      </div>
+    </ons-dialog>
+
+          <ons-dialog id="modal-progreso">
+      <div style="text-align: center; padding: 10px;">
+        <ons-row>
+          <ons-col style="text-align: right;"><ons-icon icon="fa-close" onclick="hideDialog('modal-progreso')"></ons-icon></ons-col>
+        </ons-row>
+        <p>Felicidades has cumplido con todas tus labores</p>
       </div>
     </ons-dialog>
 
@@ -463,7 +500,7 @@
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
           <ons-col>
-            <ons-progress-bar value="40" style="width: 100%" secondary-value="100"></ons-progress-bar>
+            <ons-progress-bar value="" style="width: 100%" secondary-value="100" class="barraProgress"></ons-progress-bar>
           </ons-col>
         </ons-row><br/>
       
@@ -530,7 +567,7 @@
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
           <ons-col>
-            <ons-progress-bar value="40" style="width: 100%" secondary-value="100"></ons-progress-bar>
+            <ons-progress-bar value="" style="width: 100%" secondary-value="100" class="barraProgress"></ons-progress-bar>
           </ons-col>
         </ons-row><br/>
       
