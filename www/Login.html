@@ -8,6 +8,42 @@
   <script src="js/jquery.min.js"></script>
   <script src="cordova.js"></script>
   <script type="text/javascript">
+    var loginSimple = function() {
+        var clave = $("#uClave").val();
+        var correo = $("#uCorreo").val();
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/usuarios.php',
+        type: 'post',
+        data: {
+          'metodo': 'login',
+          'correo': correo,
+          'clave': clave,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            if (data['login']) {
+              window.localStorage.setItem("idUsuario", "usuario~"+data['usuario']['id']);
+              window.location.href = "actividades.html";
+            }else{
+              alert("Error Login");
+            }
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+      };
     $(document).ready(function() {
       /*
       Llamadas a la tabla usuarios de la base de datos
@@ -53,57 +89,11 @@
 
         A continuacion les muestro un ejemplo de un login
       */
-      $.ajax({
-        url: 'http://209.222.103.210/~prestash/usuarios.php',
-        type: 'post',
-        data: {
-          'metodo': 'login',
-          'correo': 'n.marshall@hotmail.cl',
-          'clave': '123',
-        },
-        crossDomain: true,
-        cache: false,                                        
-        beforeSend: function() {
-        },
-        success: function(data) {
-          console.log(data);
-          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
-          if(!data['errores']['error']) {
-            // Aqui hay un ejemplo de como mostrar los datos
-            if (data['login']) {
-              console.log('Correcto');
-            }else{
-              console.log('Error Login');
-            }
-          }else{
-            // Aqui podran ver el error que se genero
-            console.log(data['errores']['description']);
-          }
-        },
-        error:function(jqXHR,text_status,strError){ 
-          console.log(jqXHR);
-        }
-      });
     });
   </script>
 </head>
 <body>
   <ons-splitter>
-    <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
-      <ons-page>
-        <ons-list>
-          <ons-list-item onclick="fn.load('home.html')" tappable>
-            Actividades
-          </ons-list-item>
-          <ons-list-item onclick="fn.load('settings.html')" tappable>
-            Eventos
-          </ons-list-item>
-          <ons-list-item onclick="fn.load('about.html')" tappable>
-            Contactos
-          </ons-list-item>
-        </ons-list>
-      </ons-page>
-    </ons-splitter-side>
     <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
   </ons-splitter>
   <template id="home.html">
@@ -117,19 +107,19 @@
     <ons-row>
       <ons-col></ons-col>
       <ons-col>
-        <ons-input type="text" placeholder="E-mail" style="border: #1094bc 2px solid;"></ons-input>
+        <ons-input type="text" placeholder="E-mail" style="border: #1094bc 2px solid;" id="uCorreo"></ons-input>
       </ons-col>
       <ons-col></ons-col>
     </ons-row><br><br>
         <ons-row>
       <ons-col></ons-col>
       <ons-col>
-        <ons-input type="password" placeholder="Contraseña" style="border: #1094bc 2px solid;"></ons-input>
+        <ons-input type="password" placeholder="Contraseña" style="border: #1094bc 2px solid;" id="uClave"></ons-input>
       </ons-col>
       <ons-col></ons-col>
     </ons-row><br><br>
     <ons-row>
-      <ons-col style="text-align: center; "><ons-button style="width: 60%; background: #1094bc; color: white;">Ingresar</ons-button></ons-col>
+      <ons-col style="text-align: center; "><ons-button style="width: 60%; background: #1094bc; color: white;" onclick="loginSimple()">Ingresar</ons-button></ons-col>
     </ons-row><br><br>
         <ons-row>
       <ons-col style="text-align: center; "><ons-button style="width: 60%; background: #ED1919; color: white;">Ingresar con Google</ons-button></ons-col>

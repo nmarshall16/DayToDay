@@ -6,6 +6,57 @@
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
   <script>
+    // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "login.html";
+    }
+
+    $(document).ready(function(){
+      $(document).on('click','.btnFinish', function(){
+          $(this).css('background','#1094bc');
+          $(this).css('color','#FFFFFF');
+      });
+      $(document).on('click','.actualizarE', function(){
+        var id = $(this).attr('identificador');
+        var estado = '';
+        if ($(this).attr('valor') == "t") {
+          estado = 'p';
+        }else{
+          estado = 't';
+        }
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'cambiarEstado',
+          'actividad_id': id,
+          'estado': estado,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            cargarTodas();
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      });
+      
+    });
+
     var showTemplateDialog = function() {
       var dialog = document.getElementById('my-dialog');
         if (dialog) {
@@ -17,7 +68,10 @@
         });
       }
     };
-
+    var cerrarSesion = function() {
+      window.location.href = "login.html";
+      window.localStorage.clear();
+    };
     var showFelicitacion = function() {
       var dialog = document.getElementById('modal-progreso');
         if (dialog) {
@@ -149,7 +203,7 @@
         type: 'post',
         data: {
           'metodo': 'agregar',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
           'nombre': nombre,
           'fecha': fecha,
           'hora': hora,
@@ -183,7 +237,7 @@
         type: 'post',
         data: {
           'metodo': 'verActividades',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        
@@ -224,7 +278,7 @@
         type: 'post',
         data: {
           'metodo': 'verActividades',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        
@@ -265,7 +319,7 @@
         type: 'post',
         data: {
           'metodo': 'verActividades',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        
@@ -363,47 +417,6 @@
         showFelicitacion();
       }
     }
-    $(document).ready(function(){
-      $(document).on('click','.btnFinish', function(){
-          $(this).css('background','#1094bc');
-          $(this).css('color','#FFFFFF');
-      });
-      $(document).on('click','.actualizarE', function(){
-        var id = $(this).attr('identificador');
-        var estado = '';
-        if ($(this).attr('valor') == "t") {
-          estado = 'p';
-        }else{
-          estado = 't';
-        }
-        $.ajax({
-        url: 'http://209.222.103.210/~prestash/actividad.php',
-        type: 'post',
-        data: {
-          'metodo': 'cambiarEstado',
-          'actividad_id': id,
-          'estado': estado,
-        },
-        crossDomain: true,
-        cache: false,                                        
-        beforeSend: function() {
-        },
-        success: function(data) {
-          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
-          if(!data['errores']['error']) {
-            cargarTodas();
-          }else{
-            // Aqui podran ver el error que se genero
-            console.log(data['errores']['description']);
-          }
-        },
-        error:function(jqXHR,text_status,strError){ 
-          console.log(jqXHR);
-        }
-        });
-      });
-      
-    });
   </script>
 </head>
 
@@ -422,6 +435,9 @@
           </ons-list-item>
           <ons-list-item onclick="fn.load('about.html')" tappable>
             Contactos
+          </ons-list-item>
+          <ons-list-item onclick="cerrarSesion()" tappable>
+            Cerrar Sesion 
           </ons-list-item>
         </ons-list>
       </ons-page>
