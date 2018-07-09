@@ -9,6 +9,102 @@
   <script src="cordova.js"></script>
 
   <script>
+
+    //cargador de evento
+    var cargarEvento=function(porpEx){
+      fn.load("verEventos.html");
+        //alert("hola");
+        $.ajax({
+          url: 'http://209.222.103.210/~prestash/evento.php',
+          type: 'post',
+          data: {
+            'metodo': 'verEvento',
+           'evento_id': porpEx,
+          },
+          crossDomain: true,
+          cache: false,                                        
+          beforeSend: function() {
+          },
+          success: function(data) {
+            console.log(data);
+            // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+            if(!data['errores']['error']) {
+              // Aqui hay un ejemplo de como mostrar los datos
+              //$("#result").html(""); 
+              data['evento'].forEach(function(evento) {
+              //$("#result").append("<li>"+evento['nombre']+"</li>"); 
+              $("#NameEvento").val(evento['nombre']);
+              $("#ubiEvento").val(evento['ubicacion']);
+              $("#fechEvento").val(evento['fecha']);
+
+              }); 
+                $("#fieldUser").empty();
+              data['participantes'].forEach(function(part) {
+                if (part['nombre']=="nombre_ingresado") {
+
+                }else{
+                  $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                }
+              //$("#result").append("<li>"+evento['nombre']+"</li>"); 
+              });
+
+            }else{
+              // Aqui podran ver el error que se genero
+              console.log(data['errores']['description']);
+            }
+          },
+          error:function(jqXHR,text_status,strError){ 
+            console.log(jqXHR);
+          }
+        });
+    }
+
+    //Para enviar notificación
+    var enviarInvitaciones=function(eventid){//{'body': 'Prueba de envio','title': 'Envio','additionalData':{'noti':'inv','even':'"+eventid+"'}}
+      window.plugins.OneSignal.getIds(function(ids) {
+      var notificationObj = { contents: {"en": "You have an invitation to one event", "es": "Tienes una invitación a un evento"},headings: {"en": "Event Invitation", "es": "Invitación a evento"},data: {"noti":"inv","even":eventid},
+                              include_player_ids: [ids.userId]};
+      window.plugins.OneSignal.postNotification(notificationObj,
+        function(successResponse) {
+          console.log("Notification Post Success:", successResponse);
+        },
+        function (failedResponse) {
+          console.log("Notification Post Failed: ", failedResponse);
+          alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
+        }
+      );
+    });
+    }
+
+    //Para obtener los datos de la url:
+    //**********************************************************************************************************
+    function getGET()
+    {
+        var loc = document.location.href;
+        if(loc.indexOf('?')>0)
+        {
+            var getString = loc.split('?')[1];
+            var GET = getString.split('&');
+            var get = {};
+
+            for(var i = 0, l = GET.length; i < l; i++){
+                var tmp = GET[i].split('=');
+                get[tmp[0]] = unescape(decodeURI(tmp[1]));
+            }
+            return get;
+        }
+    }
+ 
+    window.onload = function(){
+        var valores=getGET();
+        if(valores){
+            for(var index in valores){
+              cargarEvento(valores[index]);
+                //alert("clave: "+index+" - valor: "+valores[index]);
+            }
+        }
+    }//****************************************************************************************
+
     var showTemplateDialogTwo = function() {
       var dialog = document.getElementById('my-dialog-ver');
 
@@ -175,6 +271,7 @@
         beforeSend: function() {
         },
         success: function(data) {
+          enviarInvitaciones("1");
         },
         error:function(jqXHR,text_status,strError){ 
           console.log(jqXHR);
@@ -217,54 +314,7 @@
 
       $(document).on("click",".EventoUno",function(){
         var porpEx = $(this).attr("indexAtr");
-        fn.load("verEventos.html");
-        //alert("hola");
-      $.ajax({
-        url: 'http://209.222.103.210/~prestash/evento.php',
-        type: 'post',
-        data: {
-          'metodo': 'verEvento',
-         'evento_id': porpEx,
-        },
-        crossDomain: true,
-        cache: false,                                        
-        beforeSend: function() {
-        },
-        success: function(data) {
-          console.log(data);
-          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
-          if(!data['errores']['error']) {
-            // Aqui hay un ejemplo de como mostrar los datos
-            //$("#result").html(""); 
-            data['evento'].forEach(function(evento) {
-            //$("#result").append("<li>"+evento['nombre']+"</li>"); 
-            $("#NameEvento").val(evento['nombre']);
-            $("#ubiEvento").val(evento['ubicacion']);
-            $("#fechEvento").val(evento['fecha']);
-
-            }); 
-              $("#fieldUser").empty();
-            data['participantes'].forEach(function(part) {
-              if (part['nombre']=="nombre_ingresado") {
-
-              }else{
-                $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
-              }
-            //$("#result").append("<li>"+evento['nombre']+"</li>"); 
-
-            });
-
-
-
-          }else{
-            // Aqui podran ver el error que se genero
-            console.log(data['errores']['description']);
-          }
-        },
-        error:function(jqXHR,text_status,strError){ 
-          console.log(jqXHR);
-        }
-      });
+        cargarEvento(porpEx);
       });
 
     });
@@ -550,5 +600,6 @@
       </ons-page>
   </template>
     <script src="js/app.js"></script>
+  <script src="js/notificaciones.js"></script>
 </body>
 </html>

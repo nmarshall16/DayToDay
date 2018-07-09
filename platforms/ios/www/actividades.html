@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/onsenui.css">
+  <link rel="stylesheet" href="css/onsen-css-components.min.css">
+  <script src="js/onsenui.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script>
+    // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "login.html";
+    }
+
+    $(document).ready(function(){
+      $(document).on('click','.btnFinish', function(){
+          $(this).css('background','#1094bc');
+          $(this).css('color','#FFFFFF');
+      });
+      $(document).on('click','.actualizarE', function(){
+        var id = $(this).attr('identificador');
+        var estado = '';
+        if ($(this).attr('valor') == "t") {
+          estado = 'p';
+        }else{
+          estado = 't';
+        }
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'cambiarEstado',
+          'actividad_id': id,
+          'estado': estado,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            cargarTodas();
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      });
+      
+    });
+
+    var showTemplateDialog = function() {
+      var dialog = document.getElementById('my-dialog');
+        if (dialog) {
+          dialog.show();
+        } else {
+          ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+          dialog.show();
+        });
+      }
+    };
+    var cerrarSesion = function() {
+      window.location.href = "login.html";
+      window.localStorage.clear();
+    };
+    var showFelicitacion = function() {
+      var dialog = document.getElementById('modal-progreso');
+        if (dialog) {
+          dialog.show();
+        } else {
+          ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+          dialog.show();
+        });
+      }
+    };
+
+    var hideDialog = function(id) {
+      document
+      .getElementById(id)
+      .hide();
+    };
+    /*
+    Llamadas a la tabla actividad de la base de datos
+        * La url que se debe ingresar es la siguiente: http://209.222.103.210/~prestash/actividad.php
+        * El type debe ser a traves de POST o post
+        * En data se encuentra la informacion mas importante aqui se deben indicar los datos que enviaremos al servidor para hacer las consultas a continuacion explicare cuales son los datos que se deben enviar para cada consulta.
+        - Para agregar actividades data debe tener el siguiente formato
+          data: {
+          'metodo': 'agregar',
+          'usuario_id': 1,
+          'nombre': 'actividad desde ajax',
+          'fecha': '2018-05-30',
+          'hora': '10:30:00',
+          'tipo': 'e',
+          'clase': 's'
+          'addFrecuente': false,
+          }
+          nota: Si no se especifica una fecha en el archivo php se le asignara una automaticamente y si no se le asigna una hora el valor se dejara como nulo pero siempre deben estar los dos valores tanto hora como fecha con los valores minimo en '' por ejemplo = 'fecha': ''
+          
+          Ya que actividad y actividad frecuente es practicamente lo mismo e decidido ocupar el mismo metodo pero se distinguen en el valor 'clase' el cual debe tener valor 's' cuando sea una actividad normal y 'f' cuando sea una actividad frecuente
+
+          El valor addFrecuente seria un bool que indicara si la actividad normal que se esta agregando tambien se guarde como frecuente
+
+          El valor tipo indica si la actividad es obligatoria ('o') o de entretencion ('e')  
+
+        - Para modificar la informacion de una actividad data debe tener el siguiente formato:
+          data: {
+          'metodo': 'modificar',
+          'actividad_id': 8,
+          'nombre': 'Nombre de la actividad',
+          'fecha': 'yyyy-mm-dd',
+          'hora': 'hh:mm:ss',
+          'tipo': 'o',
+          'estado': 'p', 
+          }
+
+        - Para eliminar una actividad data debe tener el siguiente formato:
+          data: {
+          'metodo': 'borrarActividad',
+          'actividad_id': 8,
+          }
+
+        - Para cambiar el estado de una actividad data debe tener el siguiente formato:
+          data: {
+          'metodo': 'cambiarEstado',
+          'actividad_id': 1,
+          'estado': 't',
+          }
+          nota: este metodo sera util a la hora de marcar una actividad como terminada (t) o como pendiente (p)
+
+        - Para cargar la informacion de una actividad especifica data debe tener el siguiente formato:
+          data: {
+          'metodo': 'verActividad',
+          'actividad_id': 8,
+          }
+
+        - Para cargar todos las actividades del usuario data debe tener el siguiente formato: 
+          data: {
+          'metodo': 'verActividades',
+          'usuario_id': 1,
+          }
+        por ultimo se deben agregar estos ultimos valores al ajax para que pueda acceder correctamente al archivo php 
+        crossDomain: true,
+        cache: false,
+    */
+    var guardarActividad = function(){
+      var datos = $('#formGuardar').serialize();
+      var res = datos.split("&");
+      var valores = [];
+      res.forEach( function(element, index) {
+        var valor = element.split("=");
+        valores.push(valor);
+      });
+      var nombre = "";
+      var tipo = "";
+      var fecha = "";
+      var frecuente = "";
+      var hora = "";
+      valores.forEach( function(element, index) {
+        switch (element[0]) {
+          case "nombre":
+            if (element[1] != "") {
+              nombre = $("#nameActividad").val();
+            }
+            break;
+          case "tipo":
+            if (element[1] != "") {
+              tipo = element[1];
+            } 
+            break;
+          case "fecha":
+            if (element[1] != "") {
+              datefecha = document.getElementById("dateFecha").value;
+              var ft = datefecha.split("T");
+              fecha = ft[0];
+              hora = ft[1]; 
+            }
+            break;
+          case "frecuente":
+            if (element[1] != "") {
+              frecuente = element[1]; 
+            }
+            break;
+        }
+      });
+      if (frecuente != "") {
+          frecuente = true;
+      }else{
+        frecuente = false;
+      }
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'agregar',
+          'usuario_id': usuario_id,
+          'nombre': nombre,
+          'fecha': fecha,
+          'hora': hora,
+          'tipo': tipo,
+          'clase': 's',
+          'addFrecuente': frecuente,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            cargarTodas();
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+    };
+    // Carga las actividades obligatorias
+    var cargarObligatorias = function(){
+        fn.load('obligatorias.html');
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': usuario_id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['tipo'] == "o") {
+              var nombre = '';
+              if (actividad['estado'] == "t") {
+                nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+              }else{
+                nombre = "<label> "+actividad['nombre']+"</label>";
+              }
+              $("#aObligatorias").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+            }
+            });
+            progreso(data['actividades'].length, data['actividades']);
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+    // Carga las actividades de entretencion
+    var cargarEntretencion = function(){
+        fn.load('entretencion.html');
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': usuario_id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['tipo'] == "e") {
+              var nombre = '';
+              if (actividad['estado'] == "t") {
+                nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+              }else{
+                nombre = "<label> "+actividad['nombre']+"</label>";
+              }
+              $("#aEntretencion").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+            }
+            });
+            progreso(data['actividades'].length, data['actividades']);
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+      // Carga todas las actividades sin filtrar
+      var cargarTodas = function(){
+        fn.load('home.html')
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': usuario_id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['clase'] != "f") {
+            var icono = '';
+            var nombre = '';
+            // Se asigana el icono a la actividad obligitaria
+            if (actividad['tipo'] == "o") {
+              icono = "<ons-icon icon='fa-briefcase' size='30px'></ons-icon>";
+            }else if (actividad['tipo'] == "e") {
+              icono = "<ons-icon icon='fa-futbol-o' size='30px'></ons-icon>";
+            }
+            if (actividad['estado'] == "t") {
+              nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+            }else{
+              nombre = "<label> "+actividad['nombre']+"</label>";
+            }
+            var elemento = "<ons-row><ons-col style='margin-left: 10%'>";
+            elemento += icono;
+            elemento += nombre;
+            elemento += "</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
+            $("#actividades").append(elemento); 
+            }
+            });
+            progreso(data['actividades'].length, data['actividades']);
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+      var actividadAlateoria = function(){
+        fn.load('actividad.html')
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            var actividades = [];
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['clase'] != "f") {
+              actividades.push(actividad);
+            }
+            });
+            var idRandom = Math.floor((Math.random() * actividades.length) + 0);
+            $("#nameActividad").val(actividades[idRandom]['nombre']);
+            if (actividades[idRandom]['tipo'] != "o") {
+              $("#radioE").attr('checked', true);
+            }else{
+              $("#radioO").attr('checked', true);
+            }
+            $("#dateFecha").val(actividades[idRandom]['fecha']+"T"+actividades[idRandom]['hora']);
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+    function progreso(total, actividades) {
+      var listas = 0;
+      actividades.forEach(function(actividad) {
+        if (actividad['estado'] == "t") {
+          listas++; 
+        }
+      });
+      var progreso = Math.trunc((100*listas)/total);
+      $(".barraProgress").attr('value', progreso);
+      if (progreso == 100) {
+        showFelicitacion();
+      }
+    }
+  </script>
+</head>
+
+<body onload="cargarTodas()">
+
+  <!--Creo que este es el menú-->
+  <ons-splitter>
+    <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
+      <ons-page>
+        <ons-list>
+          <ons-list-item onclick="cargarTodas()" tappable>
+            Actividades 
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('settings.html')" tappable>
+            Eventos
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('about.html')" tappable>
+            Contactos
+          </ons-list-item>
+          <ons-list-item onclick="cerrarSesion()" tappable>
+            Cerrar Sesion 
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-splitter-side>
+    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+  </ons-splitter>
+
+  <!--Inicio de vista actividades "todas"-->
+  <template id="home.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="showTemplateDialog()">
+            <ons-icon icon="fa-plus" size="30px"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center">
+          Actividades
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Botones de la barra de arriba-->
+      <ons-row >
+        <ons-col>
+          <ons-button class="btnFinish" style="width: 100%;">Todas</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarObligatorias()" >Obligatorias</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarEntretencion()" >Diversión</ons-button>
+        </ons-col>
+      </ons-row><br>
+      <div id="actividades" style="height: 70%; overflow: scroll;">
+        <!--Actividades-->
+      </div>
+      <!--Barra de progreso-->
+      <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
+        <ons-row>
+          <ons-col>
+            <ons-progress-bar value="" style="width: 100%" secondary-value="100" class="barraProgress"></ons-progress-bar>
+          </ons-col>
+        </ons-row><br/>
+      
+
+      <!--Botón aleatorio-->
+        <ons-row>
+          <ons-col>
+            <ons-button style="width: 100%;" onclick="actividadAlateoria()">Actividad aleatoria</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+
+      <!--Modal agregar actividad-->
+      <ons-dialog id="my-dialog">
+      <div style="text-align: center; padding: 10px;">
+        <p>
+          Agregar actividad<br/><br/>
+          <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
+          <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+        </p>
+      </div>
+    </ons-dialog>
+
+          <ons-dialog id="modal-progreso">
+      <div style="text-align: center; padding: 10px;">
+        <ons-row>
+          <ons-col style="text-align: right;"><ons-icon icon="fa-close" onclick="hideDialog('modal-progreso')"></ons-icon></ons-col>
+        </ons-row>
+        <p>Felicidades has cumplido con todas tus labores</p>
+      </div>
+    </ons-dialog>
+
+      <!--Término de vista-->
+    </ons-page>
+  </template>
+
+  <!--Vista actividades obligatorias-->
+  <template id="obligatorias.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="showTemplateDialog()">
+            <ons-icon icon="fa-plus" size="30px"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center">
+          Actividades
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Botones de la barra de arriba-->
+      <ons-row>
+        <ons-col>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="cargarTodas()">Todas</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button style="width: 100%;">Obligatorias</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarEntretencion()" >Diversión</ons-button>
+        </ons-col>
+      </ons-row><br>
+      <div id="aObligatorias" style="height: 70%; overflow: scroll;">
+        <!--Actividades obligatorias-->
+      </div>
+      <!--Barra de progreso-->
+      <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
+        <ons-row>
+          <ons-col>
+            <ons-progress-bar value="" style="width: 100%" secondary-value="100" class="barraProgress"></ons-progress-bar>
+          </ons-col>
+        </ons-row><br/>
+      
+
+      <!--Botón aleatorio-->
+        <ons-row>
+          <ons-col>
+            <ons-button style="width: 100%;">Actividad aleatoria</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+
+      <!--Modal agregar actividad-->
+      <ons-dialog id="my-dialog">
+      <div style="text-align: center; padding: 10px;">
+        <p>
+            Agregar actividad<br/><br/>
+            <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
+            <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+          </p>
+        </div>
+      </ons-dialog>
+
+      <!--Término de vista-->
+    </ons-page>
+  </template>
+
+  <!--Vista de actividades de entretención-->
+  <template id="entretencion.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="showTemplateDialog()">
+            <ons-icon icon="fa-plus" size="30px"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center">
+          Actividades
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Botones de la barra de arriba-->
+      <ons-row >
+        <ons-col>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="cargarTodas()">Todas</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarObligatorias()" >Obligatorias</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button style="width: 100%">Diversión</ons-button>
+        </ons-col>
+      </ons-row><br>
+      <div id="aEntretencion" style="height: 70%; overflow: scroll;">
+        <!--Actividades de entretencion-->  
+      </div>
+      
+      <!--Barra de progreso-->
+      <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
+        <ons-row>
+          <ons-col>
+            <ons-progress-bar value="" style="width: 100%" secondary-value="100" class="barraProgress"></ons-progress-bar>
+          </ons-col>
+        </ons-row><br/>
+      
+
+      <!--Botón aleatorio-->
+        <ons-row>
+          <ons-col>
+            <ons-button style="width: 100%;">Actividad aleatoria</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+
+      <!--Modal agregar actividad-->
+      <ons-dialog id="my-dialog">
+      <div style="text-align: center; padding: 10px;">
+        <p>
+            Agregar actividad<br/><br/>
+            <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
+            <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+          </p>
+        </div>
+      </ons-dialog>
+
+      <!--Término de vista-->
+    </ons-page>
+  </template>
+
+  <!--Vista para crear, ver y modificar una actividad-->
+  <template id="actividad.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="cargarTodas()">
+            <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+          <label>Actividad</label>
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-align-justify"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+
+      <!--Aquí parte el formulario-->
+      <form method="post" id="formGuardar">
+        <br/>
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <div>Nombre de actividad</div>
+        </ons-col>
+      </ons-row><br/>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <ons-input placeholder="Nombre actividad" type="text" style="border:#1094bc 2px solid;width: 100%;" name="nombre" id="nameActividad">
+        </ons-col>
+      </ons-row><br/>
+
+      <!--Botones para ver si es obligatoria o de entretención-->
+      <ons-row >
+        <ons-col style="margin-left: 10%;">
+          <ons-radio name="tipo" value="o" id="radioO" checked>Obligacion</ons-radio>
+        </ons-col>
+        <ons-col style="margin-right: 10%">
+          <ons-radio name="tipo" value="e" id="radioE">Entretencion</ons-radio>
+        </ons-col>
+      </ons-row><br>
+
+      <!--Fecha y hora-->
+      <br/>
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <a href="#" class="show-modal"  style="text-decoration: none; color: black;">
+            <ons-icon icon="fa-plus" size="20px"></ons-icon>
+          </a>Agregar fecha y hora
+        </ons-col>
+      </ons-row><br/>
+
+      <ons-row>
+        <ons-col style="margin-left: 10%;margin-right: 10%">
+          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
+        </ons-col>
+      </ons-row><br/>
+
+      <!--Check para frecuentes-->
+      <div style="width: 90%; position: absolute;bottom: 5%; margin-left: 5%">
+        <ons-row style="margin-left: 10%">
+          <ons-col>
+            <label class="left">
+              <ons-checkbox input-id="check-1" name="frecuente" id="checkFrecuente"></ons-checkbox>
+            </label>
+            <label for="check-1" class="center">
+              Marcar actividad como frecuente
+            </label>
+          </ons-col>
+        </ons-row>
+
+        <!--Botones para guardar y cancelar-->
+        <ons-row style="margin-top: 10%;">
+          <ons-col>
+            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;" onclick="guardarActividad()">Guardar</ons-button>
+          </ons-col>
+          <ons-col>
+            <ons-button style="background: #1094bc;width: 80%;">Cancelar</ons-button>
+          </ons-col>
+        </ons-row>
+      </div>
+      </form>
+    </ons-page>
+  </template>
+  <template>
+    
+  </template>
+  <script src="cordova.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

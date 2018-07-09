@@ -19,6 +19,9 @@
         <param name="ios-package" value="CDVGestureHandler" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="OneSignalPush">
+        <param name="ios-package" value="OneSignalPush" />
+    </feature>
     <name>Day to Day</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -27,16 +30,7 @@
         Apache Cordova Team
     </author>
     <content src="index.html" />
-    <access minimum-tls-version="TLSv1.1" origin="*" requires-certificate-transparency="true" requires-forward-secrecy="false" />
-    <allow-navigation href="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
-    <allow-intent href="itms:*" />
-    <allow-intent href="itms-apps:*" />
+    <access origin="*" />
     <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
     <preference name="DisallowOverscroll" value="false" />

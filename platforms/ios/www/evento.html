@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src*; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+  <link rel="stylesheet" href="css/onsenui.css">
+  <link rel="stylesheet" href="css/onsen-css-components.min.css">
+  <script src="js/onsenui.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="cordova.js"></script>
+
+  <script>
+    var showTemplateDialogTwo = function() {
+      var dialog = document.getElementById('my-dialog-ver');
+
+      if (dialog) {
+        dialog.show();
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+          });
+      }
+    };
+    var showTemplateDialog = function() {
+      var dialog = document.getElementById('my-dialog');
+
+      if (dialog) {
+        dialog.show();
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+          });
+      }
+    };
+
+
+    var hideDialog = function(id) {
+      document
+        .getElementById(id)
+        .hide();
+    };
+
+    //Mostrar los eventos pendientes al cargar la vista
+    var cual="pendientes";
+    $(document).ready(function() {
+    var cargarDatos= function(cual){      
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'cargarEventos',
+          'usuario_id': 1,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          if(!data['errores']['error']) {
+            if (cual=="terminados") {
+              $("#eterminados").html(""); 
+              data['evento'].forEach(function(evento) {  
+                if (evento['estado']=='c') {
+                  $("#eterminados").append("<ons-row ><ons-col><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' id='btnSee' indexprop="+evento['id']+" onclick='showTemplateDialogTwo()'></ons-icon><br>Ver</ons-col><ons-col><ons-button style='background: #1094bc;' class='EventoUno' indexAtr="+evento['id']+">Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
+                }
+              });
+            }else{
+              $("#ependientes").html(""); 
+              data['evento'].forEach(function(evento) {
+                if (evento['estado']=='p') {
+                  $("#ependientes").append("<ons-row ><ons-col><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' id='btnSee' onclick='showTemplateDialogTwo()' indexprop="+evento['id']+"></ons-icon><br>Ver</ons-col><ons-col><ons-button style='background: #1094bc;' class='EventoUno' indexAtr="+evento['id']+">Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
+                }
+              });
+            }
+          }else{
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    };
+          cargarDatos(cual);
+  
+
+    $(document).on('click','#btnterminados',function() {
+      cual="terminados";
+      cargarDatos(cual);
+    });
+
+    $(document).on('click','#btnpendientes',function() {
+      cual="pendientes";
+      cargarDatos(cual);
+    });
+
+    $(document).on('click','.cargarPendientes',function() {
+      cual="pendientes";
+      cargarDatos(cual);
+    });
+
+
+
+    $(document).on("click","#btnSee",function(){
+      var prop = $(this).attr("indexprop");
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'verEvento',
+         'evento_id': prop,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            //$("#result").html(""); 
+            $("#fieldUserGo").empty("");
+            data['participantes'].forEach(function(part) {
+              if (part['nombre']=="nombre_ingresado") {
+
+              }else{
+                $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;' maxlength='9'>"+part['nombre']+"</label></ons-col></ons-row>");
+              }
+            //$("#result").append("<li>"+evento['nombre']+"</li>"); 
+
+            });
+
+
+
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    });
+
+    //Fución para crear un nuevo evento
+    $(document).on('click','#btnGuardarEvento',function() {
+      var nombre=$("#nombreEvento").val();
+      var ubicacion=$("#ubicacionEvento").val();
+      var fecha=$("#fechaEvento").val();
+      var hora;
+      var participantes=[];
+      var cont=0;
+      $('input:checkbox:checked').each(function(){
+        participantes.push($(this).attr("id").substring(3));
+      });
+              console.log(participantes[1]);
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'agregar',
+          'usuario_id': 1,
+          'nombre': nombre,
+          'ubicacion': ubicacion,
+          'fecha': fecha,
+          'hora': hora,
+          'participantes': participantes,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    });
+
+    //Función para cargar los contactos a escoger como participantes al crear evento
+    $(document).on('click','#btnCrearEvento',function() {
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/contacto.php',
+        type: 'post',
+        data: {
+          'metodo': 'verContactos',
+          'usuario_id': 9,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            $("#seleccionadorContactos").html(""); 
+            data['contactos'].forEach(function(contacto) {
+            $("#seleccionadorContactos").append("<ons-list-item tappable><label class='left'><ons-checkbox input-id='ckd"+contacto['id']+"' class='selectContactos'></ons-checkbox></label><label for='check-1' class='center'>"+contacto['nombre']+"</label></ons-list-item>"); 
+            }); 
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    });
+
+      $(document).on("click",".EventoUno",function(){
+        var porpEx = $(this).attr("indexAtr");
+        fn.load("verEventos.html");
+        //alert("hola");
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'verEvento',
+         'evento_id': porpEx,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            // Aqui hay un ejemplo de como mostrar los datos
+            //$("#result").html(""); 
+            data['evento'].forEach(function(evento) {
+            //$("#result").append("<li>"+evento['nombre']+"</li>"); 
+            $("#NameEvento").val(evento['nombre']);
+            $("#ubiEvento").val(evento['ubicacion']);
+            $("#fechEvento").val(evento['fecha']);
+
+            }); 
+              $("#fieldUser").empty();
+            data['participantes'].forEach(function(part) {
+              if (part['nombre']=="nombre_ingresado") {
+
+              }else{
+                $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+              }
+            //$("#result").append("<li>"+evento['nombre']+"</li>"); 
+
+            });
+
+
+
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+      });
+
+    });
+  </script>
+</head>
+<body>
+  <ons-splitter>
+    <ons-splitter-side id="menu" side="right" width="220px" collapse swipeable>
+      <ons-page>
+        <ons-list>
+          <a href="actividades.html" style="text-decoration: none; color: black;"><ons-list-item tappable>
+            Actividades 
+          </ons-list-item></a>
+          <ons-list-item onclick="fn.load('settings.html')" tappable>
+            Eventos
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('about.html')" tappable>
+            Contactos
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-splitter-side>
+    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+  </ons-splitter>
+  <template id="home.html">
+        <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Eventos
+        </div>
+      </ons-toolbar>
+      <ons-row >
+    <ons-col><ons-button style="width: 100%; background: #1094bc; color: white;">Pendientes</ons-button></ons-col>
+    <ons-col><ons-button id="btnterminados" style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('terminados.html')" >Terminados</ons-button></ons-col>
+  </ons-row><br><br>
+
+  <!--Aquí se cargan los eventos pendientes-->
+  <div id="ependientes" style="height: 75%; overflow: scroll;"></div>
+  
+  <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%;">
+    <ons-row>
+      <ons-col></ons-col>
+      <ons-col></ons-col>
+      <ons-col id="btnCrearEvento" style=" text-align: right;"><br><ons-icon icon="md-plus-circle" size="50px" onclick="fn.load('AddEvento.html')"></ons-icon></ons-col>
+    </ons-row>
+  </div>
+  
+  </template>
+        <template id="terminados.html">
+       <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Eventos
+        </div>
+      </ons-toolbar>
+            <ons-row >
+    <ons-col><ons-button id="btnpendientes" style="width: 100%; background: #FFFFFF; color: black;" onclick="fn.load('home.html')">Pendientes</ons-button></ons-col>
+    <ons-col><ons-button  style="width: 100%; background: #1094bc; color: white;">Terminados</ons-button></ons-col>
+  </ons-row><br><br>
+    
+  <!--Aquí se insertan los eventos terminados-->
+  <div id="eterminados"></div>
+
+    </ons-page>
+  </template>
+  <ons-dialog id="my-dialog-ver">
+    <div style="text-align: center; padding: 10px;">
+      <ons-row>
+        <ons-col style="text-align: right;"><ons-icon icon="md-close" size="20px" onclick="hideDialog('my-dialog-ver')" ></ons-icon></ons-col>
+      </ons-row>
+      <ons-row>
+        <ons-col style="text-align: center;">
+          <label>
+              Participantes
+          </label>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+            <div id="fieldUserGo" style="border: black 1px solid; overflow-y: scroll; width: 100%; height: 100px;">
+
+            </div>
+        </ons-col>
+      </ons-row>
+    </div>
+  </ons-dialog>
+    </ons-page>
+  <template id="verEventos.html">
+      <ons-page>
+      <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button class="cargarPendientes" onclick="fn.load('home.html')">
+            <ons-icon icon="fa-angle-left"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+          <label>Evento</label>
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-align-justify"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+      <ons-row>
+        <ons-col >
+          <br><br>
+          <ons-row>
+            <ons-col>
+              <div>Nombre Evento</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input id="NameEvento" placeholder="Nombre Evento"  type="text" style="border: #1094bc 2px solid; width: 90%;"></ons-input>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br><br>
+              <div>Ubicación</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input id="ubiEvento" placeholder="Ubicación" type="text" style="border: #1094bc 2px solid; width: 90%;"></ons-input>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br><br>
+              <div>Fecha y Hora</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input id="fechEvento" type="date" style="border: #1094bc 2px solid; width: 80%;"></ons-input><ons-icon icon="md-calendar-note" size="20px" ></ons-icon>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col style="text-align: center;" >
+              <br><br>
+              <div>Tu Participación</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col style="text-align: center;" >
+              <br>
+              <ons-icon style="color: #24e240;" icon="md-check" size="30px"></ons-icon>
+            </ons-col>
+          </ons-row>
+        </ons-col>
+        <ons-col >
+          <br><br>
+          <ons-row>
+            <ons-col>
+              <div>Participantes</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <br>
+            <div id="fieldUser" style="border: black 1px solid; overflow-y: scroll; width: 100%;">
+
+            </div>
+          </ons-row>
+        </ons-col>
+      </ons-row><br><br><br><br>
+      <ons-row>
+        <ons-col>
+        <ons-button class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px" ></ons-icon> Voy</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;" onclick="showTemplateDialog()"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px"  ></ons-icon> No voy</ons-button>
+        </ons-col>
+      </ons-row>
+      <ons-dialog id="my-dialog">
+         <div style="text-align: center; padding: 10px;">
+          <p>
+            ¿Por que no vas?
+         </p>
+         <ons-select id="choose-sel" >
+          <option value="basic">Sin mensaje</option>
+          <option value="material">Porque no quiero</option>
+          <option value="underbar">Estoy ocupado</option>
+        </ons-select>
+        <p>
+          <ons-button onclick="hideDialog('my-dialog')">Close</ons-button>
+        </p>
+        </div>
+      </ons-dialog>
+      </ons-page>
+  </template>
+  <template id="AddEvento.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button class="cargarPendientes" onclick="fn.load('home.html')">
+            <ons-icon icon="fa-angle-left"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center" style="text-align: center;">
+          <label>Evento</label>
+        </div>
+        <div class="right">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-align-justify"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar>
+      <ons-row>
+        <ons-col >
+          <br><br>
+          <ons-row>
+            <ons-col>
+              <div>Nombre Evento</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input id="nombreEvento" placeholder="Nombre Evento"  type="text" style="border: #1094bc 2px solid; width: 90%;"></ons-input>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br><br>
+              <div>Ubicación</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input id="ubicacionEvento" placeholder="Ubicación" type="text" style="border: #1094bc 2px solid; width: 90%;"></ons-input>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br><br>
+              <div>Fecha y Hora</div>
+            </ons-col>
+          </ons-row>
+          <ons-row>
+            <ons-col>
+              <br>
+              <ons-input id="fechaEvento" type="date" style="border: #1094bc 2px solid; width: 80%;"></ons-input><ons-icon icon="md-calendar-note" size="20px" ></ons-icon>
+            </ons-col>
+          </ons-row>
+        </ons-col>
+        <ons-col >
+          <br><br>
+          <ons-row>
+            <ons-col>
+              <div>Participantes</div>
+            </ons-col>
+          </ons-row>
+          <ons-row><br>
+            <!--Aquí se mostrarán los contactos para escoger participantes-->
+            <div id="seleccionadorContactos" style="border: black 1px solid; overflow-y: scroll; width: 100%;"></div>
+          </ons-row>
+        </ons-col>
+      </ons-row><br><br><br><br><br><br><br><br>
+      <ons-row>
+        <ons-col>
+        <ons-button id="btnGuardarEvento" onclick="fn.load('home.html')" class="cargarPendientes" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;">Guardar</ons-button>
+        </ons-col>
+        <ons-col>
+          <ons-button class="cargarPendientes" onclick="fn.load('home.html')" style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;">Cancelar</ons-button>
+        </ons-col>
+      </ons-row>
+      </ons-page>
+  </template>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -12,7 +12,7 @@
       var idUsuario = usuario.split("~");
       var usuario_id = parseInt(idUsuario[1]);
     }else{
-        window.location.href = "login.html";
+        window.location.href = "Login.html";
     }
 
     $(document).ready(function(){
@@ -69,7 +69,7 @@
       }
     };
     var cerrarSesion = function() {
-      window.location.href = "login.html";
+      window.location.href = "Login.html";
       window.localStorage.clear();
     };
     var showFelicitacion = function() {
@@ -744,5 +744,6 @@
   </template>
   <script src="cordova.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/notificaciones.js"></script>
 </body>
 </html>
