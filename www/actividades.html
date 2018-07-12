@@ -34,6 +34,7 @@
         data: {
           'metodo': 'cambiarEstado',
           'actividad_id': id,
+          'usuario_id': usuario_id,
           'estado': estado,
         },
         crossDomain: true,
@@ -43,7 +44,7 @@
         success: function(data) {
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-            cargarTodas();
+            cargarTodas(true);
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -54,7 +55,19 @@
         }
         });
       });
-      
+
+      $(document).on('click', '#agregarFecha', function() {
+        event.preventDefault();
+        if ($("#mostrarFecha").is(":visible")) {
+          $("#mostrarFecha").hide('slow/400/fast', function() {
+            
+          });
+        }else{
+          $("#mostrarFecha").show('slow/400/fast', function() {
+            
+          });
+        }
+      });      
     });
 
     var showTemplateDialog = function() {
@@ -312,7 +325,7 @@
       };
 
       // Carga todas las actividades sin filtrar
-      var cargarTodas = function(){
+      var cargarTodas = function(validacion){
         fn.load('home.html')
         $.ajax({
         url: 'http://209.222.103.210/~prestash/actividad.php',
@@ -351,7 +364,11 @@
             $("#actividades").append(elemento); 
             }
             });
-            progreso(data['actividades'].length, data['actividades']);
+            if (validacion) {
+              progreso(data['actividades'].length, data['actividades'], true);
+            }else{
+              progreso(data['actividades'].length, data['actividades']);
+            }
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -404,7 +421,7 @@
         });
       };
 
-    function progreso(total, actividades) {
+    function progreso(total, actividades, validacion) {
       var listas = 0;
       actividades.forEach(function(actividad) {
         if (actividad['estado'] == "t") {
@@ -413,7 +430,7 @@
       });
       var progreso = Math.trunc((100*listas)/total);
       $(".barraProgress").attr('value', progreso);
-      if (progreso == 100) {
+      if (validacion && progreso == 100) {
         showFelicitacion();
       }
     }
@@ -523,7 +540,7 @@
         <p>
           Agregar actividad<br/><br/>
           <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
-          <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+          <ons-button onclick="location.href='escogerFrecuentes.html';">Frecuente</ons-button>
         </p>
       </div>
     </ons-dialog>
@@ -598,7 +615,7 @@
         <p>
             Agregar actividad<br/><br/>
             <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
-            <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+            <ons-button onclick="location.href='escogerFrecuentes.html';">Frecuente</ons-button>
           </p>
         </div>
       </ons-dialog>
@@ -665,7 +682,7 @@
         <p>
             Agregar actividad<br/><br/>
             <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
-            <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+            <ons-button onclick="location.href='escogerFrecuentes.html';">Frecuente</ons-button>
           </p>
         </div>
       </ons-dialog>
@@ -722,17 +739,18 @@
       <br/>
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
-          <a href="#" class="show-modal"  style="text-decoration: none; color: black;">
+          <a class="show-modal"  style="text-decoration: none; color: black;" id="agregarFecha">
             <ons-icon icon="fa-plus" size="20px"></ons-icon>
           </a>Agregar fecha y hora
         </ons-col>
       </ons-row><br/>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%;margin-right: 10%">
-          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
-        </ons-col>
-      </ons-row><br/>
+      <div id="mostrarFecha" style="display: none;">
+        <ons-row>
+          <ons-col style="margin-left: 10%;margin-right: 10%">
+            <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
+          </ons-col>
+        </ons-row><br/>
+      </div>
 
       <!--Check para frecuentes-->
       <div style="width: 90%; position: absolute;bottom: 5%; margin-left: 5%">

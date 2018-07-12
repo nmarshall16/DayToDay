@@ -271,7 +271,7 @@
         beforeSend: function() {
         },
         success: function(data) {
-          enviarInvitaciones("1");
+          enviarInvitaciones(data['id_evento']);
         },
         error:function(jqXHR,text_status,strError){ 
           console.log(jqXHR);
