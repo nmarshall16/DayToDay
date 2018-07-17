@@ -343,6 +343,10 @@
 
      //FIN AGREGAR CONTACTO //
 
+      $(document).on("focusout", "#inputBC", function(){
+        $("#contactField").empty();
+      });
+
       $(document).on("click",".btnFinish", function(){
         alert($(".btnGo").text());
         $(".btnGo").css('background', "#FFFFFF");
