@@ -200,7 +200,7 @@
             $("#contactosNew").empty();
             $("#contactField").empty(); 
             data['usuarios'].forEach(function(usuarios) {
-              $("#contactField").append("<ons-row><ons-col style=' width:100%;><label>"+usuarios['correo']+"</label></ons-col><ons-col></ons-col><ons-col style=' width:100%;  text-align:right;'><ons-icon icon='fa-user-plus' id='iconADD' tributID="+usuarios['id']+"></ons-icon></ons-col></ons-row>");
+              $("#contactField").append("<ons-row><ons-col><label style='color: black'>"+usuarios['correo']+"</label></ons-col><ons-col></ons-col><ons-col style='text-align:right;'><ons-icon icon='fa-user-plus' id='iconADD' tributID="+usuarios['id']+"></ons-icon></ons-col></ons-row>");
 
              $(document).on('click','#iconADD',function(){
               var propID = $(this).attr("tributID");
@@ -423,16 +423,27 @@
         </div>
       </ons-toolbar>
       <br><br>
-      <div id="ViewSee">
+      <div id="ViewSee" style="position: absolute;z-index: 1;width: 100%;">
         
       </div><br><br>
-      <div id="contactField" style="border: black 1px solid; width: 100%; height: 300px; overflow-y: scroll;">
+      <div id="contactField" style="width: 100%; overflow: scroll; position: absolute;bottom: 6%;z-index: 2; background: white">
         
       </div>
       <div class="footer">
         <ons-row >
-          <ons-col><div style="width: 100%; border-top: #1094 1px solid; border-left: #1094 1px solid; border-right: #1094 1px solid;"><br></div><ons-input id="inputBC"  style="width: 100%; border-left: #1094bc 1px solid; border-right: #1094bc 1px solid; border-bottom: #1094bc 1px solid;" transparent placeholder="Buscar conocidos" txtID="-"></ons-input><input hidden id="textID"></input></ons-col>
-          <ons-col style="text-align: center"><ons-button id="btnSearch" style="width: 100%; background: #1094bc; color: white; height: 52px;" ><ons-icon icon="fa-user-plus"></ons-icon> Añadir</ons-button></ons-col>
+          <ons-col>
+            <!--<div style="width: 100%; border-top: #1094 1px solid; border-left: #1094 1px solid; border-right: #1094 1px solid;"><br>
+            </div>-->
+            <ons-input id="inputBC"  style="width: 100%; border-left: #1094bc 1px solid; border-right: #1094bc 1px solid; border-bottom: #1094bc 1px solid;" transparent placeholder="Buscar conocidos" txtID="-">
+            </ons-input>
+            <input hidden id="textID">
+            </input>
+          </ons-col>
+          <ons-col style="text-align: center">
+            <ons-button id="btnSearch" style="width: 100%; background: #1094bc; color: white;" >
+              <ons-icon icon="fa-user-plus"></ons-icon> Añadir
+            </ons-button>
+          </ons-col>
         </ons-row>
       </div>
       <ons-dialog id="my-dialogDelete">
