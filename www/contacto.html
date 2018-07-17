@@ -6,6 +6,14 @@
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
      <script>
+    // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
     var showTemplateDialog = function() {
       var dialog = document.getElementById('my-dialog');
 
