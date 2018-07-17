@@ -8,7 +8,17 @@
   <script src="js/jquery.min.js"></script>
   <script src="cordova.js"></script>
   <script type="text/javascript">
-           var showTemplateDialogStar = function() {
+      // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
+
+
+      var showTemplateDialogStar = function() {
       var dialog = document.getElementById('my-dialog-star');
 
       if (dialog) {
@@ -102,7 +112,6 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
             var valorarX = 0;
@@ -129,25 +138,13 @@
                 default:
                    texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
               }
-              $("#allSugerencias").append('<div><ons-row><ons-col><input class="esteSi" hidden value='+sugerencia['id']+'><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="120" height="102"></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div><br><form  ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
-             // x = $(".esteSi").attr('zas');
-              //console.log("ESTE SI: " );
-             /* $(".sugest").each(function( index ) {
-                
-                 if (sugerencia['id'] == $( this ).attr('attrX')) {
-                   console.log( index + ": " + $( this ).attr('attrX'));
-                 console.log("SUG: "+sugerencia['id']);
-                 console.log($("input:radio[name='estrellas']").attr('idStar',sugerencia['id']).val(sugerencia['valoraciones']).prop('checked', true)); 
-                  //$("input:radio[name='estrellas']").attr('idStar',sugerencia['id']).val(sugerencia['valoraciones']).prop('checked', true);
-                 }
-              });*/
-             // 
-             /* console.log(sugerencia['id']);
-              if (sugerencia['id'] == x) {
-                console.log(sugerencia['id']+" val: "+sugerencia['valoraciones']);
-                $(".inputStar").val(sugerencia['valoraciones']).prop('checked', true);
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
               }
-              x = 0;*/
+              $("#allSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -174,7 +171,6 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
 
@@ -203,9 +199,14 @@
                    texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
               }
              if (sugerencia['categoria_id'] == "1") {
-              $("#motiSugerencias").append('<div ><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="120" height="102"></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div><br><form  ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#motiSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
              }
-              console.log(sugerencia);
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -233,7 +234,6 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
             var valorarX = 0;
@@ -261,9 +261,14 @@
                    texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
               }
              if (sugerencia['categoria_id'] == "2") {
-              $("#conSugerencias").append('<div><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="120" height="102"></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color:#1094bc;">'+sugerencia['nombre']+'</div><br><form  ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</form></ons-col><ons-col></ons-col></ons-row></div><br>');
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#conSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
              }
-              console.log(sugerencia);
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -291,7 +296,6 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
 
@@ -319,8 +323,13 @@
                 default:
                    texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
               }
-              $("#allSugerencias").append('<div ><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="120" height="102"></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div><br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
-              console.log(sugerencia);
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#allSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -345,45 +354,31 @@
         url: 'http://209.222.103.210/~prestash/sugerencia.php',
         type: 'post',
         data: {
-          'metodo': 'verSugerencias',
+          'metodo': 'verSugerencia',
+          'sugerencia_id': idSugest,
           },
         crossDomain: true,
         cache: false,                                        
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-
-            data['sugerencias'].forEach(function(sugerencia){
-              if (sugerencia['id'] === idSugest) {
-                if (sugerencia['categoria_id'] === "1") {
-                //alert("UnO"); 
-                $("#infoSugerencia").append('<ons-row><ons-col><div style="border: black 1px solid; height: 120px;"><ons-button onclick="showTemplateDialogImg()" style="width: 100%; height: 100%; background: transparent; "><img class="imgSug" src='+sugerencia['imagen']+' style="width: 100%; height: 100%;  "></ons-button></div></ons-col></ons-row><br><ons-row><ons-col style="text-align: center;"><ons-input id="nameSug" style="border: #1094bc 2px solid;" placeholder="Nombre de sugerencia" value="'+sugerencia['nombre']+'"></ons-input></ons-col></ons-row><br><ons-row><ons-col><textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 1px solid; width: 100%; height: 120px;">'+sugerencia['descripcion']+'</textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button id="thisBTN" class="btnMoti" btnTy="1" style="width: 90%;left: 5%; color:black; background:#FFFFFF;">Motivación</ons-button></ons-col><ons-col><ons-button id="thisBTN-2" class="btnMoti" btnTy="2" style="width: 90%; left: 5%; color:black; background: #FFFFFF;">Concentración</ons-button></ons-col></ons-row>');
-                $(".footer-edit").append('<ons-row><ons-col style="text-align: center;"><ons-button class="editSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>');
-                    if (sugerencia['categoria_id'] == "1") {
-                      $("#thisBTN").css({
-                        color: 'white',
-                        background: '#1094bc'
-                      });
-                    } 
-                }else{
-                   //alert("DoS");
-                $("#infoSugerencia").append('<ons-row><ons-col><div style="border: black 1px solid; height: 120px;"><ons-button onclick="showTemplateDialogImg()" style="width: 100%; height: 100%; background: transparent; "><img class="imgSug" src='+sugerencia['imagen']+' style="width: 100%; height: 100%;  "></ons-button></div></ons-col></ons-row><br><ons-row><ons-col style="text-align: center;"><ons-input id="nameSug" style="border: #1094bc 2px solid;" placeholder="Nombre de sugerencia" value="'+sugerencia['nombre']+'"></ons-input></ons-col></ons-row><br><ons-row><ons-col><textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 1px solid; width: 100%; height: 120px;">'+sugerencia['descripcion']+'</textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button id="thisBTN"  class="btnMoti" btnTy="1" style="width: 90%;left: 5%; color:black; background:#FFFFFF;">Motivación</ons-button></ons-col><ons-col><ons-button id="thisBTN-2"  class="btnMoti" btnTy="2" style="width: 90%; left: 5%; color:black; background: #FFFFFF;">Concentración</ons-button></ons-col></ons-row>');
-                $(".footer-edit").append('<ons-row><ons-col style="text-align: center;"><ons-button class="editSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>');
-
-                    if (sugerencia['categoria_id'] == "2") {
-                      $("#thisBTN-2").css({
-                        color: 'white',
-                        background: '#1094bc'
-                      });
-                    } 
-                }
-
-              }
-              
-            });
+            var sugerencia = data['sugerencia'];
+            $("#infoSugerencia").append("<ons-row><ons-col><div align='center'><ons-button onclick='showTemplateDialogImg()' style='width: 90%; height: 140px; background: transparent; border: #1094bc 2px solid;'><img class='imgSug' src='"+sugerencia['imagen']+"' height='100%' width='100%'></ons-button></div></ons-col></ons-row><br><ons-row><ons-col style='margin-left: 5%;margin-right: 10%; text-align: center;'><ons-input placeholder='Nombre de sugerencia' type='text' style='border:#1094bc 2px solid;width: 105%;' id='nameSug' value='"+sugerencia['nombre']+"'></ons-input></ons-col></ons-row><br><ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea class='descSug' placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;'>"+sugerencia['descripcion']+"</textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button id='thisBTN' class='btnMoti' btnTy='1' style='width: 80%;left: 10%; color: black; background: #FFFFFF;'>Motivación</ons-button></ons-col><ons-col><ons-button id='thisBTN-2' class='btnMoti' btnTy='2' style='width: 80%; left: 10%; color: black; background: #FFFFFF;'>Concentración</ons-button></ons-col></ons-row>");
+                $(".footer-edit").append('<ons-row><ons-col style="text-align: center;"><ons-button class="editSugOn" style="width: 80%; background: #1094bc; color: white;">Modificar</ons-button></ons-col></ons-row>');
+            if (sugerencia['categoria_id'] == "1") {
+              $("#thisBTN").css({
+                color: 'white',
+                background: '#1094bc'
+              });
+            }
+            if (sugerencia['categoria_id'] == "2") {
+              $("#thisBTN-2").css({
+                color: 'white',
+                background: '#1094bc'
+              });
+            } 
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
             // Aqui podran ver el error que se genero
@@ -412,7 +407,6 @@
                     var texto = $(this).attr("src");
                     var newtxt = texto.split("/");
                     image = "imagenes/"+newtxt[1];
-                    console.log("SRC: "+newtxt[1]);
                     $(".imgSug").attr("src",image);
                  }); 
                 $(document).on('click','.editSugOn',function(){
@@ -443,7 +437,6 @@
                         beforeSend: function() {
                         },
                         success: function(data) {
-                          console.log(data);
                           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
                           if(!data['errores']['error']) {
                               //alert ("logrado");
@@ -467,7 +460,6 @@
                   $(document).on('click','.imgSel',function(){
                     var texto = $(this).attr("src");
                     var newtxt = texto.split("/");
-                    console.log("SRC: "+newtxt[1]);
                     imagen = "imagenes/"+newtxt[1];
                     $(".imgADD").attr("src",imagen);
                   });
@@ -488,7 +480,7 @@
                         type: 'post',
                         data: {
                         'metodo': 'agregar',
-                        'usuario_id': 1,
+                        'usuario_id': usuario_id,
                         'nombre': name,
                         'descripcion': desc,
                         'imagen': imagen,
@@ -499,7 +491,6 @@
                         beforeSend: function() {
                         },
                         success: function(data) {
-                          console.log(data);
                           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
                           if(!data['errores']['error']) {
                               //alert ("logrado");
@@ -521,54 +512,42 @@
                 });
                  var txt = 0;
         $(document).on('click','.formStar',function(){
-                                    fn.load('califSug.html');
+          fn.load('califSug.html');
        // alert("valor: "+$(this).val());
         //alert("ID: "+$(this).attr("idStar"));
         var star = $(this).val();
-         txt = $(this).attr("idStar");
-        
-                   $.ajax({
-                        url: 'http://209.222.103.210/~prestash/sugerencia.php',
-                        type: 'post',
-                       data: {
-                        'metodo': 'verSugerencias',
-                        },
-                        crossDomain: true,
-                        cache: false,                                        
-                        beforeSend: function() {
-                        },
-                        success: function(data) {
-                          console.log(data);
-
-                          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
-                          if(!data['errores']['error']) {
-                          data['sugerencias'].forEach(function(sugerencia){
-                            if (sugerencia['id'] == txt) {
-                              /* $(".putaVista").val(sugerencia['nombre']);
-                               console.log("Name: "+sugerencia['nombre']);
-                                console.log("Funciona puto: "+txt);
-                                console.log("input: "+$(".putaVista").val());*/
-                                //$(".traFunciona").append('<h1>Funciono el id del evento es: "'+txt+'" y el valor de las estrellas es de: "'+star+'"</h1>');
-                                 $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
-                                 $("#nameCal").text(sugerencia['nombre']);
-                                 $("#descCal").text(sugerencia['descripcion']);
-                                 $(".imgCal").attr('src',sugerencia['imagen']);
-                            }
-                         
-                            });
-                              //alert ("logrado");
-                            // Aqui hay un ejemplo de como mostrar los datos
-                          }else{
-                            // Aqui podran ver el error que se genero
-                            console.log(data['errores']['description']);
-                          }
-                        },
-                        error:function(jqXHR,text_status,strError){ 
-                          console.log(jqXHR);
-                        }
-                      });
-        
-       
+        if (star == "") {
+          star = 5;
+        }
+        txt = $(this).attr("idStar");
+        $.ajax({
+          url: 'http://209.222.103.210/~prestash/sugerencia.php',
+          type: 'post',
+          data: {
+            'metodo': 'verSugerencia',
+            'sugerencia_id': txt,
+          },
+          crossDomain: true,
+          cache: false,                                        
+          beforeSend: function() {
+          },
+          success: function(data) {
+            // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+            if(!data['errores']['error']) {
+              var sugerencia = data['sugerencia'];
+              $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
+              $("#nameCal").attr('value', sugerencia['nombre']);
+              $("#descSug").append("<ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;' disabled>"+sugerencia['descripcion']+"</textarea></ons-col></ons-row><br>");
+              $(".imgCal").attr('src',sugerencia['imagen']);
+            }else{
+            // Aqui podran ver el error que se genero
+              console.log(data['errores']['description']);
+            }
+          },
+          error:function(jqXHR,text_status,strError){ 
+            console.log(jqXHR);
+          }
+        });
       });
 
 
@@ -589,7 +568,7 @@
                         data: {
                           'metodo': 'valorarSugerencia',
                           'sugerencia_id': txt,
-                          'usuario_id': 1,
+                          'usuario_id': usuario_id,
                           'valor': valueStar,
                           'comentario': 'buena sugerencia perro',
                         },
@@ -598,23 +577,9 @@
                         beforeSend: function() {
                         },
                         success: function(data) {
-                          console.log(data);
 
                           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
                           if(!data['errores']['error']) {
-                         /* data['sugerencias'].forEach(function(sugerencia){
-                            if (sugerencia['id'] == txt) {
-                               $(".putaVista").val(sugerencia['nombre']);
-                               console.log("Name: "+sugerencia['nombre']);
-                                console.log("Funciona puto: "+txt);
-                                console.log("input: "+$(".putaVista").val());
-                               $(".traFunciona").append('<h1>Funciono el id del evento es: "'+txt+'" y el valor de las estrellas es de: "'+star+'"</h1>');
-                                 $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
-                                 $("#nameCal").text(sugerencia['nombre']);
-                                 $("#descCal").text(sugerencia['descripcion']);
-                            }
-                         
-                            });*/
                             location.reload();
                               //alert ("logrado");
                             // Aqui hay un ejemplo de como mostrar los datos
@@ -670,43 +635,35 @@
       });
 
       $(document).on('click','.btnAleatory',function(){
-        fn.load('sugeAleatory.html');
+        fn.load('califSug.html');
+        var star = 5;
         $.ajax({
-                        url: 'http://209.222.103.210/~prestash/sugerencia.php',
-                        type: 'post',
-                       data: {
-                        'metodo': 'verSugerencias',
-                        },
-                        crossDomain: true,
-                        cache: false,                                        
-                        beforeSend: function() {
-                        },
-                        success: function(data) {
-                          console.log(data);
-                          var aleatorioLarge = data['sugerencias'].length;
-                           var random = Math.round(Math.random() * (aleatorioLarge - 1) + 1);
-                          // alert("ran: "+random);
-                          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
-                          if(!data['errores']['error']) {
-                           data['sugerencias'].forEach(function(sugerencia){
-                            if (sugerencia['id'] == random) {
-                              $(".imgAleatory").attr('src',sugerencia['imagen']);
-                              $("#nameAleatory").text(sugerencia['nombre']);
-                              $("#descAleatory").text(sugerencia['descripcion']);
-                            }
-
-                            });
-                             // alert ("logrado");
-                            // Aqui hay un ejemplo de como mostrar los datos
-                          }else{
-                            // Aqui podran ver el error que se genero
-                            console.log(data['errores']['description']);
-                          }
-                        },
-                        error:function(jqXHR,text_status,strError){ 
-                          console.log(jqXHR);
-                        }
-                      });
+        url: 'http://209.222.103.210/~prestash/sugerencia.php',
+        type: 'post',
+        data: {
+          'metodo': 'verSugerencias',
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          if(!data['errores']['error']) {
+            var sugerencias = data['sugerencias'];
+            var idRandom = Math.floor((Math.random() * sugerencias.length) + 0);
+            $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
+            $("#nameCal").attr('value', sugerencias[idRandom]['nombre']);
+            $("#descSug").append("<ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;' disabled>"+sugerencias[idRandom]['descripcion']+"</textarea></ons-col></ons-row><br>");
+            $(".imgCal").attr('src',sugerencias[idRandom]['imagen']);
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
       });
                 
     });
@@ -924,36 +881,37 @@
       <template id="califSug.html">
     <ons-page>
       <ons-toolbar>
-        <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
-          </ons-toolbar-button>
+        <div class="left backHome">
+           <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
         </div>
         <div class="center">
-          Sometimes
+          Sugerencias
         </div>
-      </ons-toolbar>
+        <div class="right">
+           <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar><br><br>
       <ons-row>
         <ons-col>
-          <div style="border: black 1px solid; height: 120px;">
-            <img class="imgCal" src="imagenes/default.png" style="width: 100%; height: 100%; border: #1094bc 1px solid;">
+          <div align="center">
+            <ons-button onclick="showTemplateDialogImg()" style="width: 90%; height: 140px; background: transparent; border: #1094bc 2px solid;">
+              <img class="imgCal" src="imagenes/default.png" height="100%" width="100%">
+            </ons-button>
           </div>
         </ons-col>
-      </ons-row>
-      <br>
+      </ons-row><br>
       <ons-row>
-        <ons-col style="text-align: center;">
-          <label id="nameCal"></label>
-        </ons-input>
+        <ons-col style="margin-left: 5%;margin-right: 10%; text-align: center;">
+          <ons-input placeholder="Nombre de sugerencia" type="text" style="border:#1094bc 2px solid;width: 105%;" id="nameCal" disabled>
         </ons-col>
-      </ons-row>
-        <br>
-        <ons-row>
-          <ons-col>
-            <label id="descCal" style="width: 100%; height: 120px;"></label>
-          </ons-col>
-          </ons-row>
-
+      </ons-row><br>
+      <div id="descSug">
+        
+      </div>
       <div class="traFunciona">
       </div>
       <div class="footer">
@@ -1017,22 +975,21 @@
       <ons-toolbar>
         <div class="left backHome">
            <ons-toolbar-button>
-            <ons-icon icon="fa-angle-left"></ons-icon>
-          </ons-toolbar-button>
-         
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
         </div>
         <div class="center">
-          Settings
+          Sugerencias
         </div>
         <div class="right">
            <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
+            <ons-icon icon="fa-bars"></ons-icon>
           </ons-toolbar-button>
         </div>
-      </ons-toolbar>
+      </ons-toolbar><br><br>
       <div id="infoSugerencia">
       </div>
-       <div class="footer-edit">
+      <div class="footer-edit">
       </div>
       <ons-dialog id="my-dialog-img">
     <div style="text-align: center; padding: 10px;">
@@ -1066,26 +1023,56 @@
   </template>
   <template id="adirSug.html">
     <ons-page>
-            <ons-toolbar>
+      <ons-toolbar>
         <div class="left backHome">
            <ons-toolbar-button>
-            <ons-icon icon="fa-angle-left"></ons-icon>
-          </ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
         </div>
         <div class="center">
-          Settings
+          Sugerencias
         </div>
         <div class="right">
            <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
+            <ons-icon icon="fa-bars"></ons-icon>
           </ons-toolbar-button>
         </div>
-      </ons-toolbar>
-      <ons-row><ons-col><div style="border: black 1px solid; height: 120px;"><ons-button onclick="showTemplateDialogImg()" style="width: 100%; height: 100%; background: transparent; "><img class="imgADD" src="imagenes/default.png" style="width: 100%; height: 100%;  "></ons-button></div></ons-col></ons-row><br><ons-row><ons-col style="text-align: center;"><ons-input id="nameSug" style="border: #1094bc 2px solid;" placeholder="Nombre de sugerencia"></ons-input></ons-col></ons-row><br><ons-row><ons-col><textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 1px solid; width: 100%; height: 120px;"></textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button id="thisButton" class="btnMoti" btnTy="1" style="width: 90%;left: 5%; color: black; background: #FFFFFF;">Motivación</ons-button></ons-col><ons-col><ons-button id="thisButton-2" class="btnMoti" btnTy="2" style="width: 90%; left: 5%; color: black; background: #FFFFFF;">Concentración</ons-button></ons-col></ons-row>
+      </ons-toolbar><br><br>
+      <ons-row>
+        <ons-col>
+          <div align="center">
+            <ons-button onclick="showTemplateDialogImg()" style="width: 90%; height: 140px; background: transparent; border: #1094bc 2px solid;">
+              <img class="imgADD" src="imagenes/default.png" height="100%" width="100%">
+            </ons-button>
+          </div>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col style="margin-left: 5%;margin-right: 10%; text-align: center;">
+          <ons-input placeholder="Nombre de sugerencia" type="text" style="border:#1094bc 2px solid;width: 105%;" id="nameSug">
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col style="margin-left: 5%;margin-right: 7%; text-align: center;">
+          <textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 2px solid; width: 100%; height: 120px;"></textarea>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+          <ons-button id="thisButton" class="btnMoti" btnTy="1" style="width: 80%;left: 10%; color: black; background: #FFFFFF;">
+          Motivación
+        </ons-button>
+      </ons-col>
+      <ons-col>
+        <ons-button id="thisButton-2" class="btnMoti" btnTy="2" style="width: 80%; left: 10%; color: black; background: #FFFFFF;">
+        Concentración
+      </ons-button>
+    </ons-col>
+  </ons-row>
       <div class="footer">
         <ons-row><ons-col style="text-align: center;"><ons-button class="adedSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>
       </div>
-              <ons-dialog id="my-dialog-img">
+    <ons-dialog id="my-dialog-img">
     <div style="text-align: center; padding: 10px;">
       <ons-row>
         <ons-col style="text-align: right;"><ons-icon icon="md-close" size="20px" onclick="hideD('my-dialog-img')" ></ons-icon></ons-col>
