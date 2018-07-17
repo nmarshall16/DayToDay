@@ -47,6 +47,12 @@
         .getElementById(id)
         .hide();
     };
+
+    var cerrarSesion = function() {
+      window.localStorage.clear();
+      window.location.href = "Login.html";
+    };
+
     $(document).ready(function() {
       /*
       Llamadas a la tabla sugerencia de la base de datos
@@ -769,7 +775,7 @@
             Configuracion
           </ons-list-item>
           </a>
-          <a  href="#"  style="text-decoration: none; color: black;">
+          <a  onclick="cerrarSesion()"  style="text-decoration: none; color: black;">
             <ons-list-item tappable>
             Cerrar sesión
           </ons-list-item>
