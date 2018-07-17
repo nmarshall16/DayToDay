@@ -34,6 +34,7 @@
         data: {
           'metodo': 'cambiarEstado',
           'actividad_id': id,
+          'usuario_id': usuario_id,
           'estado': estado,
         },
         crossDomain: true,
@@ -43,7 +44,7 @@
         success: function(data) {
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-            cargarTodas();
+            cargarTodas(true);
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -54,7 +55,143 @@
         }
         });
       });
-      
+
+      $(document).on('click', '#agregarFecha', function() {
+        event.preventDefault();
+        if ($("#mostrarFecha").is(":visible")) {
+          $("#mostrarFecha").hide('slow/400/fast', function() {
+            
+          });
+        }else{
+          $("#mostrarFecha").show('slow/400/fast', function() {
+            
+          });
+        }
+      });
+
+      $(document).on('click', '.guardarActividad', function() {
+        event.preventDefault();
+        /* Act on the event */
+        var datos = $('#formGuardar').serialize();
+        var res = datos.split("&");
+        var valores = [];
+        res.forEach( function(element, index) {
+          var valor = element.split("=");
+          valores.push(valor);
+        });
+        var nombre = "";
+        var tipo = "";
+        var fecha = "";
+        var frecuente = "";
+        var hora = "";
+        valores.forEach( function(element, index) {
+          switch (element[0]) {
+            case "nombre":
+              if (element[1] != "") {
+                nombre = $("#nameActividad").val();
+              }
+            break;
+            case "tipo":
+              if (element[1] != "") {
+                tipo = element[1];
+              }  
+            break;
+            case "fecha":
+              if (element[1] != "") {
+                datefecha = document.getElementById("dateFecha").value;
+                var ft = datefecha.split("T");
+                fecha = ft[0];
+                hora = ft[1]; 
+              }
+            break;
+            case "frecuente":
+              if (element[1] != "") {
+                frecuente = element[1]; 
+              }
+            break;
+          }
+        });
+        if (frecuente != "") {
+          frecuente = true;
+        }else{
+          frecuente = false;
+        }
+        var error = false;
+        if (nombre == "" || $('#mostrarFecha').is(":visible") && fecha == "" && hora == "") {
+          error = true;
+        }
+        if (!error) {
+          var accion = $(this).attr('value');
+          switch (accion) {
+          case "a":
+            $.ajax({
+              url: 'http://209.222.103.210/~prestash/actividad.php',
+              type: 'post',
+              data: {
+                'metodo': 'agregar',
+                'usuario_id': usuario_id,
+                'nombre': nombre,
+                'fecha': fecha,
+                'hora': hora,
+                'tipo': tipo,
+                'clase': 's',
+                'addFrecuente': frecuente,
+              },
+              crossDomain: true,
+              cache: false,                                        
+              beforeSend: function() {
+              },
+              success: function(data) {
+              // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+              if(!data['errores']['error']) {
+                cargarTodas();
+              }else{
+              // Aqui podran ver el error que se genero
+                console.log(data['errores']['description']);
+              }
+              },
+              error:function(jqXHR,text_status,strError){ 
+                console.log(jqXHR);
+              }
+            });
+            break;
+          case "m":
+            var actividad_id = $("#idActividad").val();
+            $.ajax({
+              url: 'http://209.222.103.210/~prestash/actividad.php',
+              type: 'post',
+              data: {
+                'metodo': 'modificar',
+                'actividad_id': actividad_id,
+                'nombre': nombre,
+                'fecha': fecha,
+                'hora': hora,
+                'tipo': tipo,
+              },
+              crossDomain: true,
+              cache: false,                                        
+              beforeSend: function() {
+              },
+              success: function(data) {
+              // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+              if(!data['errores']['error']) {
+                cargarTodas();
+              }else{
+              // Aqui podran ver el error que se genero
+                console.log(data['errores']['description']);
+              }
+              },
+              error:function(jqXHR,text_status,strError){ 
+                console.log(jqXHR);
+              }
+            });
+            break;
+          }
+        }else{
+          alert("Error: Porfavor complete todos los campos");
+        }
+      }); 
+
     });
 
     var showTemplateDialog = function() {
@@ -69,8 +206,8 @@
       }
     };
     var cerrarSesion = function() {
-      window.location.href = "Login.html";
       window.localStorage.clear();
+      window.location.href = "Login.html";
     };
     var showFelicitacion = function() {
       var dialog = document.getElementById('modal-progreso');
@@ -153,82 +290,6 @@
         crossDomain: true,
         cache: false,
     */
-    var guardarActividad = function(){
-      var datos = $('#formGuardar').serialize();
-      var res = datos.split("&");
-      var valores = [];
-      res.forEach( function(element, index) {
-        var valor = element.split("=");
-        valores.push(valor);
-      });
-      var nombre = "";
-      var tipo = "";
-      var fecha = "";
-      var frecuente = "";
-      var hora = "";
-      valores.forEach( function(element, index) {
-        switch (element[0]) {
-          case "nombre":
-            if (element[1] != "") {
-              nombre = $("#nameActividad").val();
-            }
-            break;
-          case "tipo":
-            if (element[1] != "") {
-              tipo = element[1];
-            } 
-            break;
-          case "fecha":
-            if (element[1] != "") {
-              datefecha = document.getElementById("dateFecha").value;
-              var ft = datefecha.split("T");
-              fecha = ft[0];
-              hora = ft[1]; 
-            }
-            break;
-          case "frecuente":
-            if (element[1] != "") {
-              frecuente = element[1]; 
-            }
-            break;
-        }
-      });
-      if (frecuente != "") {
-          frecuente = true;
-      }else{
-        frecuente = false;
-      }
-      $.ajax({
-        url: 'http://209.222.103.210/~prestash/actividad.php',
-        type: 'post',
-        data: {
-          'metodo': 'agregar',
-          'usuario_id': usuario_id,
-          'nombre': nombre,
-          'fecha': fecha,
-          'hora': hora,
-          'tipo': tipo,
-          'clase': 's',
-          'addFrecuente': frecuente,
-        },
-        crossDomain: true,
-        cache: false,                                        
-        beforeSend: function() {
-        },
-        success: function(data) {
-          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
-          if(!data['errores']['error']) {
-            cargarTodas();
-          }else{
-            // Aqui podran ver el error que se genero
-            console.log(data['errores']['description']);
-          }
-        },
-        error:function(jqXHR,text_status,strError){ 
-          console.log(jqXHR);
-        }
-        });
-    };
     // Carga las actividades obligatorias
     var cargarObligatorias = function(){
         fn.load('obligatorias.html');
@@ -248,14 +309,16 @@
           if(!data['errores']['error']) {
             $("#actividades").html("");
             data['actividades'].forEach(function(actividad) {
-            if (actividad['tipo'] == "o") {
-              var nombre = '';
-              if (actividad['estado'] == "t") {
-                nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
-              }else{
-                nombre = "<label> "+actividad['nombre']+"</label>";
-              }
-              $("#aObligatorias").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+            if (actividad['clase'] != "f") {
+              if (actividad['tipo'] == "o") {
+                var nombre = '';
+                if (actividad['estado'] == "t") {
+                  nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+                }else{
+                  nombre = "<label> "+actividad['nombre']+"</label>";
+                }
+                $("#aObligatorias").append("<ons-row><a onclick='verActividad("+actividad['id']+")'><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+              }  
             }
             });
             progreso(data['actividades'].length, data['actividades']);
@@ -289,14 +352,16 @@
           if(!data['errores']['error']) {
             $("#actividades").html("");
             data['actividades'].forEach(function(actividad) {
-            if (actividad['tipo'] == "e") {
-              var nombre = '';
-              if (actividad['estado'] == "t") {
-                nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
-              }else{
-                nombre = "<label> "+actividad['nombre']+"</label>";
-              }
-              $("#aEntretencion").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+            if (actividad['clase'] != "f") {
+              if (actividad['tipo'] == "e") {
+                var nombre = '';
+                if (actividad['estado'] == "t") {
+                  nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+                }else{
+                  nombre = "<label> "+actividad['nombre']+"</label>";
+                }
+                $("#aEntretencion").append("<ons-row><a onclick='verActividad("+actividad['id']+")'><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+              } 
             }
             });
             progreso(data['actividades'].length, data['actividades']);
@@ -312,8 +377,8 @@
       };
 
       // Carga todas las actividades sin filtrar
-      var cargarTodas = function(){
-        fn.load('home.html')
+      var cargarTodas = function(validacion){
+        fn.load('home.html');
         $.ajax({
         url: 'http://209.222.103.210/~prestash/actividad.php',
         type: 'post',
@@ -326,7 +391,7 @@
         beforeSend: function() {
         },
         success: function(data) {
-          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta
           if(!data['errores']['error']) {
             $("#actividades").html("");
             data['actividades'].forEach(function(actividad) {
@@ -344,14 +409,18 @@
             }else{
               nombre = "<label> "+actividad['nombre']+"</label>";
             }
-            var elemento = "<ons-row><ons-col style='margin-left: 10%'>";
+            var elemento = "<ons-row><a onclick='verActividad("+actividad['id']+")'><ons-col style='margin-left: 10%'>";
             elemento += icono;
             elemento += nombre;
-            elemento += "</ons-col><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
+            elemento += "</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
             $("#actividades").append(elemento); 
             }
             });
-            progreso(data['actividades'].length, data['actividades']);
+            if (validacion) {
+              progreso(data['actividades'].length, data['actividades'], true);
+            }else{
+              progreso(data['actividades'].length, data['actividades']);
+            }
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -393,6 +462,9 @@
               $("#radioO").attr('checked', true);
             }
             $("#dateFecha").val(actividades[idRandom]['fecha']+"T"+actividades[idRandom]['hora']);
+            $(".guardarActividad").attr('value', 'm');
+            $("#idActividad").val(actividades[idRandom]['id']);
+            $("#marcarFrecuente").hide();
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
@@ -404,7 +476,7 @@
         });
       };
 
-    function progreso(total, actividades) {
+    function progreso(total, actividades, validacion) {
       var listas = 0;
       actividades.forEach(function(actividad) {
         if (actividad['estado'] == "t") {
@@ -413,9 +485,50 @@
       });
       var progreso = Math.trunc((100*listas)/total);
       $(".barraProgress").attr('value', progreso);
-      if (progreso == 100) {
+      if (validacion && progreso == 100) {
         showFelicitacion();
       }
+    }
+
+     function verActividad(id) {
+      fn.load('actividad.html')
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividad',
+          'actividad_id': id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            var actividad = data['actividad'];
+            if (actividad['hora'] != null) {
+              $("#mostrarFecha").show();
+            }
+            $("#nameActividad").val(actividad['nombre']);
+            if (actividad['tipo'] != "o") {
+              $("#radioE").attr('checked', true);
+            }else{
+              $("#radioO").attr('checked', true);
+            }
+            $("#dateFecha").val(actividad['fecha']+"T"+actividad['hora']);
+            $(".guardarActividad").attr('value', 'm');
+            $("#idActividad").val(id);
+            $("#marcarFrecuente").hide();
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
     }
   </script>
 </head>
@@ -455,7 +568,7 @@
             Configuracion
           </ons-list-item>
           </a>
-          <a  href="#"  style="text-decoration: none; color: black;">
+          <a onclick="cerrarSesion()"  style="text-decoration: none; color: black;">
             <ons-list-item tappable>
             Cerrar sesión
           </ons-list-item>
@@ -523,7 +636,7 @@
         <p>
           Agregar actividad<br/><br/>
           <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
-          <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+          <ons-button onclick="location.href='escogerFrecuentes.html';">Frecuente</ons-button>
         </p>
       </div>
     </ons-dialog>
@@ -598,7 +711,7 @@
         <p>
             Agregar actividad<br/><br/>
             <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
-            <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+            <ons-button onclick="location.href='escogerFrecuentes.html';">Frecuente</ons-button>
           </p>
         </div>
       </ons-dialog>
@@ -665,7 +778,7 @@
         <p>
             Agregar actividad<br/><br/>
             <ons-button onclick="fn.load('actividad.html')">Nueva</ons-button>
-            <ons-button onclick="hideDialog('my-dialog')">Frecuente</ons-button>
+            <ons-button onclick="location.href='escogerFrecuentes.html';">Frecuente</ons-button>
           </p>
         </div>
       </ons-dialog>
@@ -722,21 +835,23 @@
       <br/>
       <ons-row>
         <ons-col style="margin-left: 10%;margin-right: 10%">
-          <a href="#" class="show-modal"  style="text-decoration: none; color: black;">
+          <a class="show-modal"  style="text-decoration: none; color: black;" id="agregarFecha">
             <ons-icon icon="fa-plus" size="20px"></ons-icon>
           </a>Agregar fecha y hora
         </ons-col>
       </ons-row><br/>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%;margin-right: 10%">
-          <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
-        </ons-col>
-      </ons-row><br/>
+      <div id="mostrarFecha" style="display: none;">
+        <ons-row>
+          <ons-col style="margin-left: 10%;margin-right: 10%">
+            <ons-input type="datetime-local" style="border:#1094bc 2px solid;width: 100%;" name="fecha" id="dateFecha">
+          </ons-col>
+        </ons-row><br/>
+      </div>
 
       <!--Check para frecuentes-->
       <div style="width: 90%; position: absolute;bottom: 5%; margin-left: 5%">
-        <ons-row style="margin-left: 10%">
+        <div id="marcarFrecuente">
+          <ons-row style="margin-left: 10%">
           <ons-col>
             <label class="left">
               <ons-checkbox input-id="check-1" name="frecuente" id="checkFrecuente"></ons-checkbox>
@@ -745,15 +860,16 @@
               Marcar actividad como frecuente
             </label>
           </ons-col>
-        </ons-row>
-
+          </ons-row>
+        </div>
         <!--Botones para guardar y cancelar-->
         <ons-row style="margin-top: 10%;">
           <ons-col>
-            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;" onclick="guardarActividad()">Guardar</ons-button>
+            <ons-button style="background: #1094bc;width: 80%;margin-left: 15%;" class="guardarActividad" value="a">Guardar</ons-button>
+            <input type="hidden" name="id_actividad" value="0" id="idActividad">
           </ons-col>
           <ons-col>
-            <ons-button style="background: #1094bc;width: 80%;">Cancelar</ons-button>
+            <ons-button style="background: #1094bc;width: 80%;" onclick="cargarTodas()">Cancelar</ons-button>
           </ons-col>
         </ons-row>
       </div>

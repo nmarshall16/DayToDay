@@ -12,12 +12,12 @@
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\drawable-xxhdpi-v4\\googleg_standard_color_18.png"
     },
     {
-        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notification_bg_normal.9.png.flat",
-        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\ac7fd91b1b2b2f198b0a152d3bd39f48\\res\\drawable-xhdpi-v4\\notification_bg_normal.9.png"
-    },
-    {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_notification_template_big_media_custom.xml.flat",
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\388368232ef51e4b078c5338fa48ee85\\res\\layout\\notification_template_big_media_custom.xml"
+    },
+    {
+        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notification_bg_normal.9.png.flat",
+        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\ac7fd91b1b2b2f198b0a152d3bd39f48\\res\\drawable-xhdpi-v4\\notification_bg_normal.9.png"
     },
     {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
@@ -64,12 +64,12 @@
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\customtabs-27.1.1.aar\\cf4e49dee8211c0933b1acdb5cca38c4\\res\\layout\\browser_actions_context_menu_page.xml"
     },
     {
-        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
-        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xhdpi-v4\\common_google_signin_btn_icon_light_normal_background.9.png"
-    },
-    {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_common_google_signin_btn_text_dark_normal_background.9.png.flat",
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xhdpi-v4\\common_google_signin_btn_text_dark_normal_background.9.png"
+    },
+    {
+        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
+        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xhdpi-v4\\common_google_signin_btn_icon_light_normal_background.9.png"
     },
     {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_common_full_open_on_phone.png.flat",
@@ -108,12 +108,12 @@
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\drawable-xhdpi-v4\\googleg_disabled_color_18.png"
     },
     {
-        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\raw_consumer_onesignal_keep.xml.flat",
-        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\OneSignal-3.9.1.aar\\fc230ead25b34fc617fbbddd7ccb48df\\res\\raw\\consumer_onesignal_keep.xml"
-    },
-    {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_icon.png.flat",
         "source": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\icon.png"
+    },
+    {
+        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\raw_consumer_onesignal_keep.xml.flat",
+        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\OneSignal-3.9.1.aar\\fc230ead25b34fc617fbbddd7ccb48df\\res\\raw\\consumer_onesignal_keep.xml"
     },
     {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notification_bg_low_normal.9.png.flat",
@@ -132,12 +132,12 @@
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\drawable-xhdpi-v4\\common_full_open_on_phone.png"
     },
     {
-        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_googleg_disabled_color_18.png.flat",
-        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xxhdpi-v4\\googleg_disabled_color_18.png"
-    },
-    {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_notification_tile_bg.xml.flat",
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\940ebc1d100a80bd8623289fe915c451\\res\\drawable\\notification_tile_bg.xml"
+    },
+    {
+        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_googleg_disabled_color_18.png.flat",
+        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xxhdpi-v4\\googleg_disabled_color_18.png"
     },
     {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_common_google_signin_btn_icon_disabled.xml.flat",
@@ -180,12 +180,12 @@
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable\\common_google_signin_btn_icon_dark_focused.xml"
     },
     {
-        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_common_google_signin_btn_icon_light.xml.flat",
-        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable\\common_google_signin_btn_icon_light.xml"
-    },
-    {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_googleg_disabled_color_18.png.flat",
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xhdpi-v4\\googleg_disabled_color_18.png"
+    },
+    {
+        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_common_google_signin_btn_icon_light.xml.flat",
+        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable\\common_google_signin_btn_icon_light.xml"
     },
     {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_notification_action.xml.flat",
@@ -244,12 +244,12 @@
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\drawable-mdpi-v4\\common_google_signin_btn_text_light_normal_background.9.png"
     },
     {
-        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_notification_template_lines_media.xml.flat",
-        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\6d44936b1b06631d4fa14082951a7a84\\res\\layout\\notification_template_lines_media.xml"
-    },
-    {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\940ebc1d100a80bd8623289fe915c451\\res\\drawable-xhdpi-v4\\notify_panel_notification_icon_bg.png"
+    },
+    {
+        "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_notification_template_lines_media.xml.flat",
+        "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.1.aar\\6d44936b1b06631d4fa14082951a7a84\\res\\layout\\notification_template_lines_media.xml"
     },
     {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout-v16_notification_template_custom_big.xml.flat",
@@ -264,12 +264,12 @@
         "source": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\src\\main\\res\\mipmap-ldpi\\icon.png"
     },
     {
-        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21_notification_action_background.xml.flat",
-        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\ac7fd91b1b2b2f198b0a152d3bd39f48\\res\\drawable-v21\\notification_action_background.xml"
-    },
-    {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_googleg_standard_color_18.png.flat",
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\0563c806abfe7791c37648403ac2f0b0\\res\\drawable-xhdpi-v4\\googleg_standard_color_18.png"
+    },
+    {
+        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21_notification_action_background.xml.flat",
+        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\ac7fd91b1b2b2f198b0a152d3bd39f48\\res\\drawable-v21\\notification_action_background.xml"
     },
     {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_browser_actions_context_menu_page.xml.flat",
@@ -304,12 +304,12 @@
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\940ebc1d100a80bd8623289fe915c451\\res\\drawable-hdpi-v4\\notification_bg_low_pressed.9.png"
     },
     {
-        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
-        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\drawable-xhdpi-v4\\common_google_signin_btn_icon_light_normal_background.9.png"
-    },
-    {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-land-xxhdpi_screen.png.flat",
         "source": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\src\\main\\res\\drawable-land-xxhdpi\\screen.png"
+    },
+    {
+        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
+        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\drawable-xhdpi-v4\\common_google_signin_btn_icon_light_normal_background.9.png"
     },
     {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-port-xhdpi_screen.png.flat",
@@ -324,12 +324,12 @@
         "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\17cb79ef9ca6e79ccde14f844371bc5c\\res\\color\\common_google_signin_btn_text_light.xml"
     },
     {
-        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notification_bg_normal_pressed.9.png.flat",
-        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\ac7fd91b1b2b2f198b0a152d3bd39f48\\res\\drawable-xhdpi-v4\\notification_bg_normal_pressed.9.png"
-    },
-    {
         "merged": "C:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_browser_actions_context_menu_row.xml.flat",
         "source": "C:\\Users\\Nicolas\\.gradle\\caches\\transforms-1\\files-1.1\\customtabs-27.1.1.aar\\62c0199acfdcf58c8818c46b101c6458\\res\\layout\\browser_actions_context_menu_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_notification_bg_normal_pressed.9.png.flat",
+        "source": "C:\\Users\\carol\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.1.aar\\ac7fd91b1b2b2f198b0a152d3bd39f48\\res\\drawable-xhdpi-v4\\notification_bg_normal_pressed.9.png"
     },
     {
         "merged": "C:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_common_google_signin_btn_icon_light_focused.xml.flat",

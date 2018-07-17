@@ -9,9 +9,116 @@
   <script src="cordova.js"></script>
 
   <script>
+    // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
+
+    //confirmar participación a evento
+    $(document).on('click','#confirmarB',function() {
+      switch(estev){
+        case '1':
+          estev=4;
+          break;
+        case '2':
+          estev=2;          
+          break;
+        case '3':
+          estev=1;
+          break;
+        case '4':
+          estev=2;
+          break;
+        case '5':
+          estev=1;
+          break;
+        defalut:
+          estev=1;
+          break;
+      }
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'cambiarParticipacion',
+          'evento_id': ideve,
+          'participante_id': usuario_id,
+          'estado': estev,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          if(!data['errores']['error']) {
+            location.href ="evento.html?inv="+ideve;
+          }else{
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    });
+
+    //rechazar participación a evento
+    $(document).on('click','#rechazarB',function() {
+      switch(estev){
+        case '1':
+          estev=4;
+          break;
+        case '2':
+          estev=4;
+          break;
+        case '3':
+          estev=3;
+          break;
+        case '4':
+          estev=4;
+          break;
+        case '5':
+          estev=3;
+          break;
+        defalut:
+          estev=3;
+          break;
+      }
+      $.ajax({
+        url: 'http://209.222.103.210/~prestash/evento.php',
+        type: 'post',
+        data: {
+          'metodo': 'cambiarParticipacion',
+          'evento_id': ideve,
+          'participante_id': usuario_id,
+          'estado': estev,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          console.log(data);
+          if(!data['errores']['error']) {
+            location.href ="evento.html?inv="+ideve;
+          }else{
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+      });
+    });
 
     //cargador de evento
     var cargarEvento=function(porpEx){
+      ideve=porpEx;
       fn.load("verEventos.html");
         //alert("hola");
         $.ajax({
@@ -32,18 +139,61 @@
               // Aqui hay un ejemplo de como mostrar los datos
               //$("#result").html(""); 
               data['evento'].forEach(function(evento) {
-              //$("#result").append("<li>"+evento['nombre']+"</li>"); 
-              $("#NameEvento").val(evento['nombre']);
-              $("#ubiEvento").val(evento['ubicacion']);
-              $("#fechEvento").val(evento['fecha']);
+                //$("#result").append("<li>"+evento['nombre']+"</li>"); 
+                $("#NameEvento").val(evento['nombre']);
+                $("#ubiEvento").val(evento['ubicacion']);
+                $("#fechEvento").val(evento['fecha']);
+              });
 
-              }); 
-                $("#fieldUser").empty();
+              $("#fieldUser").empty();
+
+              //participación
+              estev=data['participantes'][0]['estado_id'];
+              switch(data['participantes'][0]['estado_id']){
+                case '1': //Aceptación
+                  $("#parti").append("<ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon>");
+                    break;
+                case '2': //Confirmación
+                  $("#parti").append("<ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon>");
+                  break;
+                case '3': //Rechazo
+                  $("#parti").append("<ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon>");
+                  break;
+                 case '4': //No confirma
+                  $("#parti").append("<ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon>");
+                  break;
+                case '5': //Pendiente
+                  break;
+                defalut:
+                  break;
+              }
+              
+
+              //Participantes del evento
               data['participantes'].forEach(function(part) {
                 if (part['nombre']=="nombre_ingresado") {
 
                 }else{
-                  $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                  switch(part['estado_id']){
+                    case '1': //Aceptación
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '2': //Confirmación
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '3': //Rechazo
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '4': //No confirma
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '5': //Pendiente
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    defalut:
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                  }
                 }
               //$("#result").append("<li>"+evento['nombre']+"</li>"); 
               });
@@ -64,16 +214,17 @@
       window.plugins.OneSignal.getIds(function(ids) {
       var notificationObj = { contents: {"en": "You have an invitation to one event", "es": "Tienes una invitación a un evento"},headings: {"en": "Event Invitation", "es": "Invitación a evento"},data: {"noti":"inv","even":eventid},
                               include_player_ids: [ids.userId]};
-      window.plugins.OneSignal.postNotification(notificationObj,
-        function(successResponse) {
-          console.log("Notification Post Success:", successResponse);
-        },
-        function (failedResponse) {
-          console.log("Notification Post Failed: ", failedResponse);
-          alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
-        }
-      );
-    });
+        window.plugins.OneSignal.postNotification(notificationObj,
+          function(successResponse) {
+            console.log("Notification Post Success:", successResponse);
+          },
+          function (failedResponse) {
+            console.log("Notification Post Failed: ", failedResponse);
+            alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
+          }
+        );
+      });
+      location.href ="evento.html?inv="+data['id_evento'];
     }
 
     //Para obtener los datos de la url:
@@ -117,18 +268,6 @@
           });
       }
     };
-    var showTemplateDialog = function() {
-      var dialog = document.getElementById('my-dialog');
-
-      if (dialog) {
-        dialog.show();
-      } else {
-        ons.createElement('dialog.html', { append: true })
-          .then(function(dialog) {
-            dialog.show();
-          });
-      }
-    };
 
 
     var hideDialog = function(id) {
@@ -140,13 +279,16 @@
     //Mostrar los eventos pendientes al cargar la vista
     var cual="pendientes";
     $(document).ready(function() {
+      var ideve;
+      var estev;
+
     var cargarDatos= function(cual){      
       $.ajax({
         url: 'http://209.222.103.210/~prestash/evento.php',
         type: 'post',
         data: {
           'metodo': 'cargarEventos',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        
@@ -179,7 +321,7 @@
         }
       });
     };
-          cargarDatos(cual);
+    cargarDatos(cual);
   
 
     $(document).on('click','#btnterminados',function() {
@@ -223,7 +365,27 @@
               if (part['nombre']=="nombre_ingresado") {
 
               }else{
-                $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;' maxlength='9'>"+part['nombre']+"</label></ons-col></ons-row>");
+                switch(part['estado_id']){
+                    case '1': //Aceptación
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '2': //Confirmación
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '3': //Rechazo
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '4': //No confirma
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '5':
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    defalut:
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                  }
+                //$("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;' maxlength='9'>"+part['nombre']+"</label></ons-col></ons-row>");
               }
             //$("#result").append("<li>"+evento['nombre']+"</li>"); 
 
@@ -259,7 +421,7 @@
         type: 'post',
         data: {
           'metodo': 'agregar',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
           'nombre': nombre,
           'ubicacion': ubicacion,
           'fecha': fecha,
@@ -271,7 +433,7 @@
         beforeSend: function() {
         },
         success: function(data) {
-          enviarInvitaciones("1");
+          enviarInvitaciones(data['id_evento']);
         },
         error:function(jqXHR,text_status,strError){ 
           console.log(jqXHR);
@@ -286,7 +448,7 @@
         type: 'post',
         data: {
           'metodo': 'verContactos',
-          'usuario_id': 9,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        
@@ -363,6 +525,8 @@
     </ons-splitter-side>
     <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
   </ons-splitter>
+
+  
   <template id="home.html">
         <ons-page>
       <ons-toolbar>
@@ -396,6 +560,7 @@
     </ons-row>
   </div>
   
+
   </template>
         <template id="terminados.html">
        <ons-page>
@@ -419,6 +584,8 @@
 
     </ons-page>
   </template>
+
+
   <ons-dialog id="my-dialog-ver">
     <div style="text-align: center; padding: 10px;">
       <ons-row>
@@ -441,6 +608,8 @@
     </div>
   </ons-dialog>
     </ons-page>
+
+
   <template id="verEventos.html">
       <ons-page>
       <ons-toolbar>
@@ -503,9 +672,9 @@
             </ons-col>
           </ons-row>
           <ons-row>
-            <ons-col style="text-align: center;" >
+            <ons-col id="parti" style="text-align: center;" >
               <br>
-              <ons-icon style="color: #24e240;" icon="md-check" size="30px"></ons-icon>
+              <!--<ons-icon style="color: #24e240;" icon="md-check" size="30px"></ons-icon>-->
             </ons-col>
           </ons-row>
         </ons-col>
@@ -526,29 +695,16 @@
       </ons-row><br><br><br><br>
       <ons-row>
         <ons-col>
-        <ons-button class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px" ></ons-icon> Voy</ons-button>
+        <ons-button id="confirmarB" class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-check" size="20px" ></ons-icon> Voy</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;" onclick="showTemplateDialog()"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px"  ></ons-icon> No voy</ons-button>
+          <ons-button id="rechazarB" style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px"  ></ons-icon> No voy</ons-button>
         </ons-col>
       </ons-row>
-      <ons-dialog id="my-dialog">
-         <div style="text-align: center; padding: 10px;">
-          <p>
-            ¿Por que no vas?
-         </p>
-         <ons-select id="choose-sel" >
-          <option value="basic">Sin mensaje</option>
-          <option value="material">Porque no quiero</option>
-          <option value="underbar">Estoy ocupado</option>
-        </ons-select>
-        <p>
-          <ons-button onclick="hideDialog('my-dialog')">Close</ons-button>
-        </p>
-        </div>
-      </ons-dialog>
       </ons-page>
   </template>
+
+
   <template id="AddEvento.html">
     <ons-page>
       <ons-toolbar>

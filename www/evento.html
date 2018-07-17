@@ -9,6 +9,15 @@
   <script src="cordova.js"></script>
 
   <script>
+    // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
+
     //confirmar participación a evento
     $(document).on('click','#confirmarB',function() {
       switch(estev){
@@ -24,6 +33,9 @@
         case '4':
           estev=2;
           break;
+        case '5':
+          estev=1;
+          break;
         defalut:
           estev=1;
           break;
@@ -34,7 +46,7 @@
         data: {
           'metodo': 'cambiarParticipacion',
           'evento_id': ideve,
-          'participante_id': idusu,
+          'participante_id': usuario_id,
           'estado': estev,
         },
         crossDomain: true,
@@ -70,6 +82,9 @@
         case '4':
           estev=4;
           break;
+        case '5':
+          estev=3;
+          break;
         defalut:
           estev=3;
           break;
@@ -80,7 +95,7 @@
         data: {
           'metodo': 'cambiarParticipacion',
           'evento_id': ideve,
-          'participante_id': idusu,
+          'participante_id': usuario_id,
           'estado': estev,
         },
         crossDomain: true,
@@ -103,7 +118,6 @@
 
     //cargador de evento
     var cargarEvento=function(porpEx){
-      idusu=1;
       ideve=porpEx;
       fn.load("verEventos.html");
         //alert("hola");
@@ -148,6 +162,8 @@
                  case '4': //No confirma
                   $("#parti").append("<ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon>");
                   break;
+                case '5': //Pendiente
+                  break;
                 defalut:
                   break;
               }
@@ -170,6 +186,9 @@
                       break;
                     case '4': //No confirma
                       $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
+                    case '5': //Pendiente
+                      $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
                       break;
                     defalut:
                       $("#fieldUser").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
@@ -195,16 +214,17 @@
       window.plugins.OneSignal.getIds(function(ids) {
       var notificationObj = { contents: {"en": "You have an invitation to one event", "es": "Tienes una invitación a un evento"},headings: {"en": "Event Invitation", "es": "Invitación a evento"},data: {"noti":"inv","even":eventid},
                               include_player_ids: [ids.userId]};
-      window.plugins.OneSignal.postNotification(notificationObj,
-        function(successResponse) {
-          console.log("Notification Post Success:", successResponse);
-        },
-        function (failedResponse) {
-          console.log("Notification Post Failed: ", failedResponse);
-          alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
-        }
-      );
-    });
+        window.plugins.OneSignal.postNotification(notificationObj,
+          function(successResponse) {
+            console.log("Notification Post Success:", successResponse);
+          },
+          function (failedResponse) {
+            console.log("Notification Post Failed: ", failedResponse);
+            alert("Notification Post Failed:\n" + JSON.stringify(failedResponse));
+          }
+        );
+      });
+      location.href ="evento.html?inv="+data['id_evento'];
     }
 
     //Para obtener los datos de la url:
@@ -259,7 +279,6 @@
     //Mostrar los eventos pendientes al cargar la vista
     var cual="pendientes";
     $(document).ready(function() {
-      var idusu;
       var ideve;
       var estev;
 
@@ -269,7 +288,7 @@
         type: 'post',
         data: {
           'metodo': 'cargarEventos',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        
@@ -359,6 +378,9 @@
                     case '4': //No confirma
                       $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col><ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon><ons-icon style='color: #ED1919;' icon='md-close' size='20px'></ons-icon></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
                       break;
+                    case '5':
+                      $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
+                      break;
                     defalut:
                       $("#fieldUserGo").append("<ons-row><ons-col><ons-icon icon='md-account' size='20px'></ons-icon></ons-col><ons-col></ons-col><ons-col><label style='font-size: 10px;'>"+part['nombre']+"</label></ons-col></ons-row>");
                       break;
@@ -399,7 +421,7 @@
         type: 'post',
         data: {
           'metodo': 'agregar',
-          'usuario_id': 1,
+          'usuario_id': usuario_id,
           'nombre': nombre,
           'ubicacion': ubicacion,
           'fecha': fecha,
@@ -426,7 +448,7 @@
         type: 'post',
         data: {
           'metodo': 'verContactos',
-          'usuario_id': 9,
+          'usuario_id': usuario_id,
         },
         crossDomain: true,
         cache: false,                                        

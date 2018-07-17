@@ -6,6 +6,15 @@
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
   <script>
+     // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
+
     var showTemplateDialog = function() {
       var dialog = document.getElementById('my-dialog');
         if (dialog) {
@@ -24,16 +33,187 @@
       .hide();
     };
 
+    var cargarTodas = function(){
+        fn.load('home.html')
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': usuario_id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['clase'] != "s") {
+            var icono = '';
+            var nombre = '';
+            // Se asigana el icono a la actividad obligitaria
+            if (actividad['tipo'] == "o") {
+              icono = "<ons-icon icon='fa-briefcase' size='30px'></ons-icon>";
+            }else if (actividad['tipo'] == "e") {
+              icono = "<ons-icon icon='fa-futbol-o' size='30px'></ons-icon>";
+            }
+            if (actividad['estado'] == "t") {
+              nombre = "<label><strike> "+actividad['nombre']+"</strike></label>";
+            }else{
+              nombre = "<label> "+actividad['nombre']+"</label>";
+            }
+            var elemento = "<ons-row><ons-col style='margin-left: 10%'>";
+            elemento += icono;
+            elemento += nombre;
+            elemento += "</ons-col><ons-col style='margin-right: 10%; text-align: right;'><label class='right'><ons-checkbox input-id='actividad-"+actividad['id']+"' value='false' onChange='activarCheck("+actividad['id']+")'></ons-checkbox></label></ons-col></ons-row><br><br>";
+            $("#actividades").append(elemento); 
+            }
+            });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+       var cargarObligatorias = function(){
+        fn.load('obligatorias.html')
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': usuario_id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['clase'] != "s") {
+              if (actividad['tipo'] == "o") {
+                var nombre = "<label> "+actividad['nombre']+"</label>";
+                $("#actividades").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><label class='right'><ons-checkbox input-id='actividad-"+actividad['id']+"' value='false' onChange='activarCheck("+actividad['id']+")'></ons-checkbox></label></ons-col></ons-row><br><br>");
+              }
+            }
+            });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };
+
+    // Carga las actividades de entretencion
+    var cargarEntretencion = function(){
+        fn.load('entretencion.html');
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'verActividades',
+          'usuario_id': usuario_id,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            $("#actividades").html("");
+            data['actividades'].forEach(function(actividad) {
+            if (actividad['clase'] != "s") {
+              if (actividad['tipo'] == "e") {
+                var nombre = nombre = "<label> "+actividad['nombre']+"</label>";
+                $("#actividades").append("<ons-row><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col><ons-col style='margin-right: 10%; text-align: right;'><label class='right'><ons-checkbox input-id='actividad-"+actividad['id']+"' value='false' onChange='activarCheck("+actividad['id']+")'></ons-checkbox></label></ons-col></ons-row><br><br>");
+              }
+            }
+            });
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      };      
+
     $(document).ready(function(){
       $(document).on('click','.btnFinish', function(){
           $(this).css('background','#1094bc');
           $(this).css('color','#FFFFFF');
       });
+
+      $(document).on('click', '.agregarFrecuentes', function(event) {
+        event.preventDefault();
+        var elementos = document.getElementsByClassName("checkbox__input");
+        var actividades = [];
+        Array.prototype.forEach.call(elementos, function(element) {
+          var actividad = $(element).attr('id').split("-");
+          var valor = $(element).attr('value');
+          var id = parseInt(actividad[1]);
+          if (valor != "false") {
+            actividades.push(id);
+          }
+        });
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/actividad.php',
+        type: 'post',
+        data: {
+          'metodo': 'agregarFrecuentes',
+          'usuario_id': usuario_id,
+          'actividades': actividades,
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+          if(!data['errores']['error']) {
+            window.location.href = "actividades.html";
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
+        });
+      });
     });
+    var activarCheck = function(id) {
+        var boton = $("#actividad-"+id);
+        var valor = $(boton).attr('value');
+        if (valor != "false") {
+          $(boton).attr('value', 'false');
+        }else{
+          $(boton).attr('value', 'true');
+        }
+      }
   </script>
 </head>
 
-<body>
+<body onload="cargarTodas()">
 
   <!--Creo que este es el menú-->
   <ons-splitter>
@@ -101,73 +281,26 @@
       <!--Botones de la barra de arriba-->
       <ons-row >
         <ons-col>
-          <ons-button class="btnFinish" style="width: 100%;" onclick="fn.load('home.html')">Todas</ons-button>
+          <ons-button class="btnFinish" style="width: 100%;" onclick="">Todas</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('obligatorias.html')" >Obligatorias</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarObligatorias()" >Obligatorias</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('entretencion.html')" >Diversión</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarEntretencion()" >Diversión</ons-button>
         </ons-col>
       </ons-row><br>
 
       <!--Indicaciones-->
       <div style="margin-left: 10%">Seleccionar actividades frecuentes:</div><br><br>
-
-      <!--Una actividad-->
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 1
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
-          Actividad 2
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 3
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
-          Actividad 4
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
-
+      <div id="actividades" style="height: 70%; overflow: scroll;">
+        <!--Actividades-->
+      </div>
       <!--Botón agregar-->
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
           <ons-col>
-            <ons-button style="width: 100%;text-align: center;">Agregar</ons-button>
+            <ons-button style="width: 100%;text-align: center;" class="agregarFrecuentes">Agregar</ons-button>
           </ons-col>
         </ons-row>
       </div>
@@ -198,49 +331,28 @@
       <!--Botones de la barra de arriba-->
       <ons-row >
         <ons-col>
-          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="fn.load('home.html')">Todas</ons-button>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="cargarTodas()">Todas</ons-button>
         </ons-col>
         <ons-col>
           <ons-button style="width: 100%;">Obligatorias</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('entretencion.html')" >Diversión</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarEntretencion()" >Diversión</ons-button>
         </ons-col>
       </ons-row><br>
 
       <!--Indicaciones-->
       <div style="margin-left: 10%">Seleccionar actividades frecuentes:</div><br><br>
 
-      <!--Una actividad-->
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 1
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-briefcase" size="30px"></ons-icon>
-          Actividad 3
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
+      <div id="actividades" style="height: 70%; overflow: scroll;">
+        <!--Actividades-->
+      </div>
 
       <!--Botón agregar-->
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
           <ons-col>
-            <ons-button style="width: 100%;text-align: center;">Agregar</ons-button>
+            <ons-button style="width: 100%;text-align: center;" class="agregarFrecuentes">Agregar</ons-button>
           </ons-col>
         </ons-row>
       </div>
@@ -271,10 +383,10 @@
       <!--Botones de la barra de arriba-->
       <ons-row >
         <ons-col>
-          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="fn.load('home.html')">Todas</ons-button>
+          <ons-button class="btnFinish" style="width: 100%;background: #FFFFFF;color: black" onclick="cargarTodas()">Todas</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="fn.load('obligatorias.html')" >Obligatorias</ons-button>
+          <ons-button  style="width: 100%; background: #FFFFFF;color: black" onclick="cargarObligatorias()" >Obligatorias</ons-button>
         </ons-col>
         <ons-col>
           <ons-button style="width: 100%">Diversión</ons-button>
@@ -284,36 +396,15 @@
       <!--Indicaciones-->
       <div style="margin-left: 10%">Seleccionar actividades frecuentes:</div><br><br>
 
-      <!--Una actividad-->
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
-          Actividad 2
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
-
-      <ons-row>
-        <ons-col style="margin-left: 10%">
-          <ons-icon icon="fa-gamepad" size="30px"></ons-icon>
-          Actividad 4
-        </ons-col>
-        <ons-col style="margin-right: 10%; text-align: right;">
-          <label class="right">
-            <ons-checkbox input-id="check-1"></ons-checkbox>
-          </label>
-        </ons-col>
-      </ons-row><br><br>
+      <div id="actividades" style="height: 70%; overflow: scroll;">
+        <!--Actividades-->
+      </div>
 
       <!--Botón agregar-->
       <div style="width: 90%;margin-left:5%;margin-right: 5%;position: absolute;bottom: 3%">
         <ons-row>
           <ons-col>
-            <ons-button style="width: 100%;text-align: center;">Agregar</ons-button>
+            <ons-button style="width: 100%;text-align: center;" class="agregarFrecuentes">Agregar</ons-button>
           </ons-col>
         </ons-row>
       </div>
