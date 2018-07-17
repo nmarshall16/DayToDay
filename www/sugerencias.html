@@ -659,7 +659,7 @@
             var idRandom = Math.floor((Math.random() * sugerencias.length) + 0);
             $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
             $("#nameCal").attr('value', sugerencias[idRandom]['nombre']);
-            $("#descSug").append("<ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;' disabled>"+sugerencias[idRandom]['descripcion']+"</textarea></ons-col></ons-row><br>");
+            $("#descSug").append("<ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;' readonly>"+sugerencias[idRandom]['descripcion']+"</textarea></ons-col></ons-row><br>");
             $(".imgCal").attr('src',sugerencias[idRandom]['imagen']);
           }else{
             // Aqui podran ver el error que se genero
