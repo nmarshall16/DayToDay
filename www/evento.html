@@ -148,8 +148,13 @@
               $("#fieldUser").empty();
 
               //participación
-              estev=data['participantes'][0]['estado_id'];
-              switch(data['participantes'][0]['estado_id']){
+              data['participantes'].forEach(function(usuar) {
+                if(usuar['id']==usuario_id){
+                  estev=usuar['estado_id'];                  
+                }
+              });
+
+              switch(estev){
                 case '1': //Aceptación
                   $("#parti").append("<ons-icon style='color: #24e240;' icon='md-check' size='20px'></ons-icon>");
                     break;
