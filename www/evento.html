@@ -171,6 +171,7 @@
 
               //Participantes del evento
               data['participantes'].forEach(function(part) {
+                if(part['id']!=usuario_id){
                 if (part['nombre']=="nombre_ingresado") {
 
                 }else{
@@ -195,6 +196,7 @@
                       break;
                   }
                 }
+                }
               //$("#result").append("<li>"+evento['nombre']+"</li>"); 
               });
 
@@ -213,7 +215,7 @@
     var enviarInvitaciones=function(eventid){//{'body': 'Prueba de envio','title': 'Envio','additionalData':{'noti':'inv','even':'"+eventid+"'}}
       window.plugins.OneSignal.getIds(function(ids) {
       var notificationObj = { contents: {"en": "You have an invitation to one event", "es": "Tienes una invitación a un evento"},headings: {"en": "Event Invitation", "es": "Invitación a evento"},data: {"noti":"inv","even":eventid},
-                              include_player_ids: [ids.userId]};
+                              include_player_ids: [ids.userId,"55fd463b-9257-4aa3-ac38-7875cb77cd14"]};
         window.plugins.OneSignal.postNotification(notificationObj,
           function(successResponse) {
             console.log("Notification Post Success:", successResponse);
@@ -412,6 +414,7 @@
       var hora;
       var participantes=[];
       var cont=0;
+      participantes.push(usuario_id);
       $('input:checkbox:checked').each(function(){
         participantes.push($(this).attr("id").substring(3));
       });
@@ -568,6 +571,13 @@
        <ons-page>
       <ons-toolbar>
         <div class="left">
+          <a href="actividades.html">
+            <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
+          </a>
+        </div>
+        <div class="right">
           <ons-toolbar-button onclick="fn.open()">
             <ons-icon icon="md-menu"></ons-icon>
           </ons-toolbar-button>
@@ -694,7 +704,7 @@
             </div>
           </ons-row>
         </ons-col>
-      </ons-row><br><br><br><br>
+      </ons-row><br><br><br>
       <ons-row>
         <ons-col>
         <ons-button id="confirmarB" class="btnVoy" style="background: #1094bc;width: 80%;margin-left: 15%;"><ons-icon style="color: #FFFFFF;" icon="md-check" size="20px" ></ons-icon> Voy</ons-button>
