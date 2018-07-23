@@ -61,15 +61,15 @@
         url: 'http://209.222.103.210/~prestash/evento.php',
         type: 'post',
         data: {
-          'metodo': 'cargarEventos',
-          'usuario_id': 1,
+          'metodo': 'verEvento',
+          'evento_id': 44,
         },
         crossDomain: true,
         cache: false,                                        
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
+          console.log(data['participantes'][0]['estado_id']);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
             // Aqui hay un ejemplo de como mostrar los datos

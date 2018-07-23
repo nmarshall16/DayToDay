@@ -1,13 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+  <meta http-equiv="Content-Security-Policy" content="default-src*; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
   <link rel="stylesheet" href="css/onsenui.css">
   <link rel="stylesheet" href="css/onsen-css-components.min.css">
   <script src="js/onsenui.min.js"></script>
   <script src="js/jquery.min.js"></script>
   <script src="cordova.js"></script>
   <script type="text/javascript">
+      // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
+
+
+      var showTemplateDialogStar = function() {
+      var dialog = document.getElementById('my-dialog-star');
+
+      if (dialog) {
+        dialog.show();
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+          });
+      }
+    };
+    var showTemplateDialogImg = function() {
+      var dialog = document.getElementById('my-dialog-img');
+
+      if (dialog) {
+        dialog.show();
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+          });
+      }
+    };
+    var hideD = function(id) {
+      document
+        .getElementById(id)
+        .hide();
+    };
+
+    var cerrarSesion = function() {
+      window.localStorage.clear();
+      window.location.href = "Login.html";
+    };
+
     $(document).ready(function() {
       /*
       Llamadas a la tabla sugerencia de la base de datos
@@ -73,13 +118,39 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-
+            var valorarX = 0;
+            var texteando = "";
             data['sugerencias'].forEach(function(sugerencia){
-              $("#allSugerencias").append('<div><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+'></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div><br><form  ><p class="clasificacion" style="direction: rtl; "><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label></p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
-              console.log(sugerencia);
+              valorarX = Math.round(sugerencia['total']/sugerencia['valoraciones']);
+              //alert("Resultado: "+valorarX);
+              switch(valorarX){
+                case 1:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 2:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 3:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 4:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 5:
+                  texteando = '<input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                default:
+                   texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+              }
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#allSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -106,15 +177,42 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
 
+           var valorarX = 0;
+            var texteando = "";
             data['sugerencias'].forEach(function(sugerencia){
+              valorarX = Math.round(sugerencia['total']/sugerencia['valoraciones']);
+              //alert("Resultado: "+valorarX);
+              switch(valorarX){
+                case 1:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 2:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 3:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 4:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 5:
+                  texteando = '<input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                default:
+                   texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+              }
              if (sugerencia['categoria_id'] == "1") {
-              $("#motiSugerencias").append('<div ><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+'></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div><br><form  ><p class="clasificacion" style="direction: rtl; "><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label></p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#motiSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
              }
-              console.log(sugerencia);
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -142,15 +240,41 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-
+            var valorarX = 0;
+            var texteando = "";
             data['sugerencias'].forEach(function(sugerencia){
+              valorarX = Math.round(sugerencia['total']/sugerencia['valoraciones']);
+              //alert("Resultado: "+valorarX);
+              switch(valorarX){
+                case 1:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 2:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 3:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 4:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 5:
+                  texteando = '<input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                default:
+                   texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+              }
              if (sugerencia['categoria_id'] == "2") {
-              $("#conSugerencias").append('<div><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+'></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color:#1094bc;">'+sugerencia['nombre']+'</div><br><form  ><p class="clasificacion" style="direction: rtl; "><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label></p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#conSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
              }
-              console.log(sugerencia);
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -178,13 +302,40 @@
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
 
+            var valorarX = 0;
+            var texteando = "";
             data['sugerencias'].forEach(function(sugerencia){
-              $("#allSugerencias").append('<div ><ons-row><ons-col><div style="border: black 1px solid; height: 100px;"><img src='+sugerencia['imagen']+'></div></ons-col><ons-col style="text-align: center;"><div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div><br><form ><p class="clasificacion" style="direction: rtl; "><input class="inputStar formStar"  idStar='+sugerencia['id']+'id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label></p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
-              console.log(sugerencia);
+              valorarX = Math.round(sugerencia['total']/sugerencia['valoraciones']);
+              //alert("Resultado: "+valorarX);
+              switch(valorarX){
+                case 1:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 2:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 3:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 4:
+                  texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                case 5:
+                  texteando = '<input class="inputStar formStar" checked idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+                break;
+                default:
+                   texteando = '<input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio1-'+sugerencia['id']+'" type="radio" name="estrellas" value=5><label class="star" for="radio1-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio2-'+sugerencia['id']+'" type="radio" name="estrellas" value=4><label class="star" for="radio2-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio3-'+sugerencia['id']+'" type="radio" name="estrellas" value="3"><label class="star" for="radio3-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio4-'+sugerencia['id']+'" type="radio" name="estrellas" value=2><label class="star" for="radio4-'+sugerencia['id']+'">★</label><input class="inputStar formStar" idStar='+sugerencia['id']+' id="radio5-'+sugerencia['id']+'" type="radio" name="estrellas" value="1"><label class="star" for="radio5-'+sugerencia['id']+'">★</label>';
+              }
+              var ver = "";
+              if (usuario_id != parseInt(sugerencia['usuario_id'])) {
+                ver = '<div class="formStar" idStar='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }else{
+                ver = '<div class="sugest" attrX='+sugerencia['id']+' style="color: #1094bc;">'+sugerencia['nombre']+'</div>';
+              }
+              $("#allSugerencias").append('<div ><ons-row><ons-col><div style="border: #1094bc 2px solid; height: 100px;"><img src='+sugerencia['imagen']+' width="100%" height="100%"></div></ons-col><ons-col style="text-align: center;">'+ver+'<br><form ><p class="clasificacion" style="direction: rtl; ">'+texteando+'</p></form></ons-col><ons-col></ons-col></ons-row></div><br>');
             });
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
@@ -209,32 +360,31 @@
         url: 'http://209.222.103.210/~prestash/sugerencia.php',
         type: 'post',
         data: {
-          'metodo': 'verSugerencias',
+          'metodo': 'verSugerencia',
+          'sugerencia_id': idSugest,
           },
         crossDomain: true,
         cache: false,                                        
         beforeSend: function() {
         },
         success: function(data) {
-          console.log(data);
           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
           if(!data['errores']['error']) {
-
-            data['sugerencias'].forEach(function(sugerencia){
-              if (sugerencia['id'] === idSugest) {
-                if (sugerencia['categoria_id'] === "1") {
-                alert("UnO");
-                $("#infoSugerencia").append('<ons-row><ons-col><div style="border: black 1px solid; height: 120px;"><img class="imgSug" src="'+sugerencia['imagen']+'" style="width: 100%; height: 100%; border: #1094bc 1px solid;"></div></ons-col></ons-row><br><ons-row><ons-col style="text-align: center;"><ons-input id="nameSug" style="border: #1094bc 2px solid;" placeholder="Nombre de sugerencia" value="'+sugerencia['nombre']+'"></ons-input></ons-col></ons-row><br><ons-row><ons-col><textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 1px solid; width: 100%; height: 120px;">'+sugerencia['descripcion']+'</textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button class="btnMoti" btnTy="1" style="width: 90%;left: 5%;">Motivación</ons-button></ons-col><ons-col><ons-button class="btnMoti" btnTy="2" style="width: 90%; left: 5%;">Concentración</ons-button></ons-col></ons-row>');
-                $(".footer-edit").append('<ons-row><ons-col style="text-align: center;"><ons-button class="editSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>');
-                }else{
-                   alert("DoS");
-                $("#infoSugerencia").append('<ons-row><ons-col><div style="border: black 1px solid; height: 120px;"><img class="imgSug" src="'+sugerencia['imagen']+'" style="width: 100%; height: 100%; border: #1094bc 1px solid;"></div></ons-col></ons-row><br><ons-row><ons-col style="text-align: center;"><ons-input id="nameSug" style="border: #1094bc 2px solid;" placeholder="Nombre de sugerencia" value="'+sugerencia['nombre']+'"></ons-input></ons-col></ons-row><br><ons-row><ons-col><textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 1px solid; width: 100%; height: 120px;">'+sugerencia['descripcion']+'</textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button class="btnMoti" btnTy="1" style="width: 90%;left: 5%;">Motivación</ons-button></ons-col><ons-col><ons-button class="btnMoti" btnTy="2" style="width: 90%; left: 5%;">Concentración</ons-button></ons-col></ons-row>');
-                $(".footer-edit").append('<ons-row><ons-col style="text-align: center;"><ons-button class="editSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>');
-                }
-
-              }
-              
-            });
+            var sugerencia = data['sugerencia'];
+            $("#infoSugerencia").append("<ons-row><ons-col><div align='center'><ons-button onclick='showTemplateDialogImg()' style='width: 90%; height: 140px; background: transparent; border: #1094bc 2px solid;'><img class='imgSug' src='"+sugerencia['imagen']+"' height='100%' width='100%'></ons-button></div></ons-col></ons-row><br><ons-row><ons-col style='margin-left: 5%;margin-right: 10%; text-align: center;'><ons-input placeholder='Nombre de sugerencia' type='text' style='border:#1094bc 2px solid;width: 105%;' id='nameSug' value='"+sugerencia['nombre']+"'></ons-input></ons-col></ons-row><br><ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea class='descSug' placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;'>"+sugerencia['descripcion']+"</textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button id='thisBTN' class='btnMoti' btnTy='1' style='width: 80%;left: 10%; color: black; background: #FFFFFF;'>Motivación</ons-button></ons-col><ons-col><ons-button id='thisBTN-2' class='btnMoti' btnTy='2' style='width: 80%; left: 10%; color: black; background: #FFFFFF;'>Concentración</ons-button></ons-col></ons-row>");
+                $(".footer-edit").append('<ons-row><ons-col style="text-align: center;"><ons-button class="editSugOn" style="width: 80%; background: #1094bc; color: white;">Modificar</ons-button></ons-col></ons-row>');
+            if (sugerencia['categoria_id'] == "1") {
+              $("#thisBTN").css({
+                color: 'white',
+                background: '#1094bc'
+              });
+            }
+            if (sugerencia['categoria_id'] == "2") {
+              $("#thisBTN-2").css({
+                color: 'white',
+                background: '#1094bc'
+              });
+            } 
             // Aqui hay un ejemplo de como mostrar los datos
           }else{
             // Aqui podran ver el error que se genero
@@ -246,23 +396,38 @@
         }
       });
       });
-                      var tipCat =0;
+                      var tipCat = 0;
+                      var image = "imagenes/default.png";
                  $(document).on('click',".btnMoti",function(){
                     if ($(this).attr("btnTy") == "1") {
-                       alert("Selecciono MOTIVACIÓN!")
+                       //alert("Selecciono MOTIVACIÓN!")
                     }
                     if($(this).attr("btnTy") == "2"){
-                      alert("Selecciono CONCENTRACIÓN")
+                      //alert("Selecciono CONCENTRACIÓN")
                     }
                    tipCat = $(this).attr("btnTy");
                   });
+                    
+
+                  $(document).on('click','.imgSel',function(){
+                    var texto = $(this).attr("src");
+                    var newtxt = texto.split("/");
+                    image = "imagenes/"+newtxt[1];
+                    $(".imgSug").attr("src",image);
+                 }); 
                 $(document).on('click','.editSugOn',function(){
                   var name = $("#nameSug").val();
                   var desc = $(".descSug").val();
-                  var image = $(".imgSug").attr('src');
-                  alert("ID:"+idSugest+"N: "+name+" D: "+desc+" T: "+tipCat+" IMA: "+image)
-
-                   $.ajax({
+                  //
+                  if (imagen == "imagenes/default.png") {
+                    image = $(".imgSug").attr('src');
+                  }
+                  if (tipCat == 0) {
+                    tipCat = $(".btnMoti").attr("btnTy");
+                  }
+                  //alert("ID:"+idSugest+"N: "+name+" D: "+desc+" T: "+tipCat+" IMA: "+image)
+                  if (name != "" && desc !="" && tipCat !="" && image != "imagenes/default.png") {
+                    $.ajax({
                         url: 'http://209.222.103.210/~prestash/sugerencia.php',
                         type: 'post',
                         data: {
@@ -278,10 +443,10 @@
                         beforeSend: function() {
                         },
                         success: function(data) {
-                          console.log(data);
                           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
                           if(!data['errores']['error']) {
-                              alert ("logrado");
+                              //alert ("logrado");
+                              location.reload();
                             // Aqui hay un ejemplo de como mostrar los datos
                           }else{
                             // Aqui podran ver el error que se genero
@@ -292,23 +457,39 @@
                           console.log(jqXHR);
                         }
                       });
+                  }else{
+                    alert("Campos vacios!");
+                  }
+                   
                 });
-
+                var imagen = "imagenes/default.png";
+                  $(document).on('click','.imgSel',function(){
+                    var texto = $(this).attr("src");
+                    var newtxt = texto.split("/");
+                    imagen = "imagenes/"+newtxt[1];
+                    $(".imgADD").attr("src",imagen);
+                  });
                 $(document).on('click','.adedSugOn',function(){
                   var name = $("#nameSug").val();
                   var desc = $(".descSug").val();
-                  var image = $(".imgSug").attr('src');
-                  alert("ID:"+idSugest+"N: "+name+" D: "+desc+" T: "+tipCat+" IMA: "+image)
-
-                   $.ajax({
+                  //image = $(".imgADD").attr('src');
+                  if (imagen == "imagenes/default.png") {
+                    imagen = $(".imgADD").attr('src');
+                  }
+                  if (tipCat == 0) {
+                    tipCat = $(".btnMoti").attr("btnTy");
+                  }
+                  //alert("ID:"+idSugest+"N: "+name+" D: "+desc+" T: "+tipCat+" IMA: "+imagen)
+                  if (name != "" && desc != "" && tipCat != "" && imagen != "imagenes/default.png" ) {
+                    $.ajax({
                         url: 'http://209.222.103.210/~prestash/sugerencia.php',
                         type: 'post',
                         data: {
                         'metodo': 'agregar',
-                        'usuario_id': 1,
+                        'usuario_id': usuario_id,
                         'nombre': name,
                         'descripcion': desc,
-                        'imagen': image,
+                        'imagen': imagen,
                         'categoria_id': tipCat,
                         },
                         crossDomain: true,
@@ -316,10 +497,10 @@
                         beforeSend: function() {
                         },
                         success: function(data) {
-                          console.log(data);
                           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
                           if(!data['errores']['error']) {
-                              alert ("logrado");
+                              //alert ("logrado");
+                              location.reload();
                             // Aqui hay un ejemplo de como mostrar los datos
                           }else{
                             // Aqui podran ver el error que se genero
@@ -330,38 +511,83 @@
                           console.log(jqXHR);
                         }
                       });
+                  }else{
+                    alert("Campos vacios!");
+                  }
+                   
                 });
+                 var txt = 0;
         $(document).on('click','.formStar',function(){
-          
-        alert("valor: "+$(this).val());
-        alert("ID: "+$(this).attr("idStar"));
-        var txt = $(this).attr("idStar");
-        
-                   $.ajax({
+          fn.load('califSug.html');
+       // alert("valor: "+$(this).val());
+        //alert("ID: "+$(this).attr("idStar"));
+        var star = $(this).val();
+        if (star == "") {
+          star = 5;
+        }
+        txt = $(this).attr("idStar");
+        $.ajax({
+          url: 'http://209.222.103.210/~prestash/sugerencia.php',
+          type: 'post',
+          data: {
+            'metodo': 'verSugerencia',
+            'sugerencia_id': txt,
+          },
+          crossDomain: true,
+          cache: false,                                        
+          beforeSend: function() {
+          },
+          success: function(data) {
+            // Con esta consulta se valida que no haya habido ningun problema con la consulta  
+            if(!data['errores']['error']) {
+              var sugerencia = data['sugerencia'];
+              $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
+              $("#nameCal").attr('value', sugerencia['nombre']);
+              $("#descSug").append("<ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;' readonly>"+sugerencia['descripcion']+"</textarea></ons-col></ons-row><br>");
+              $(".imgCal").attr('src',sugerencia['imagen']);
+            }else{
+            // Aqui podran ver el error que se genero
+              console.log(data['errores']['description']);
+            }
+          },
+          error:function(jqXHR,text_status,strError){ 
+            console.log(jqXHR);
+          }
+        });
+      });
+
+
+        var valueStar = 0;
+      $(document).on('click','.checkVal',function(){
+        showTemplateDialogStar();
+        //alert($(this).val());
+        valueStar = $(this).val();
+        $('input:radio[name="estrellasDosModal"][value='+valueStar+']').prop('checked', true);
+      });
+
+      $(document).on('click','#readyCal',function(){
+        //alert(valueStar);
+        //alert("Evento: "+txt);
+        $.ajax({
                         url: 'http://209.222.103.210/~prestash/sugerencia.php',
                         type: 'post',
-                       data: {
-                        'metodo': 'verSugerencias',
+                        data: {
+                          'metodo': 'valorarSugerencia',
+                          'sugerencia_id': txt,
+                          'usuario_id': usuario_id,
+                          'valor': valueStar,
+                          'comentario': 'buena sugerencia perro',
                         },
                         crossDomain: true,
                         cache: false,                                        
                         beforeSend: function() {
                         },
                         success: function(data) {
-                          console.log(data);
-                          fn.load('califSug.html');
+
                           // Con esta consulta se valida que no haya habido ningun problema con la consulta  
                           if(!data['errores']['error']) {
-                          data['sugerencias'].forEach(function(sugerencia){
-                            if (sugerencia['id'] == txt) {
-                               $(".putaVista").val(sugerencia['nombre']);
-                               console.log("Name: "+sugerencia['nombre']);
-                                console.log("Funciona puto: "+txt);
-                                console.log("input: "+$(".putaVista").val());
-                            }
-                         
-                            });
-                              alert ("logrado");
+                            location.reload();
+                              //alert ("logrado");
                             // Aqui hay un ejemplo de como mostrar los datos
                           }else{
                             // Aqui podran ver el error que se genero
@@ -372,16 +598,80 @@
                           console.log(jqXHR);
                         }
                       });
-        
-        //$('input:radio[name="estrellasDos"][value="2"]').prop('checked', true);
+      });
+      $(document).on('click' ,'#thisButton', function(){
+        $(this).css({
+          color: 'white',
+          background: '#1094bc'
+        });
+        $("#thisButton-2").css({
+          color: 'black',
+          background: '#FFFFFF'
+        });
+      });
+      $(document).on('click' ,'#thisButton-2', function(){
+        $(this).css({
+          color: 'white',
+          background: '#1094bc'
+        });
+        $("#thisButton").css({
+          color: 'black',
+          background: '#FFFFFF'
+        });
+      });
+            $(document).on('click' ,'#thisBTN', function(){
+        $(this).css({
+          color: 'white',
+          background: '#1094bc'
+        });
+        $("#thisBTN-2").css({
+          color: 'black',
+          background: '#FFFFFF'
+        });
+      });
+      $(document).on('click' ,'#thisBTN-2', function(){
+        $(this).css({
+          color: 'white',
+          background: '#1094bc'
+        });
+        $("#thisBTN").css({
+          color: 'black',
+          background: '#FFFFFF'
+        });
       });
 
-
-
-      $(document).on('click','.checkVal',function(){
-        alert($(this).val());
+      $(document).on('click','.btnAleatory',function(){
+        fn.load('califSug.html');
+        var star = 5;
+        $.ajax({
+        url: 'http://209.222.103.210/~prestash/sugerencia.php',
+        type: 'post',
+        data: {
+          'metodo': 'verSugerencias',
+        },
+        crossDomain: true,
+        cache: false,                                        
+        beforeSend: function() {
+        },
+        success: function(data) {
+          if(!data['errores']['error']) {
+            var sugerencias = data['sugerencias'];
+            var idRandom = Math.floor((Math.random() * sugerencias.length) + 0);
+            $('input:radio[name="estrellasDos"][value='+star+']').prop('checked', true);
+            $("#nameCal").attr('value', sugerencias[idRandom]['nombre']);
+            $("#descSug").append("<ons-row><ons-col style='margin-left: 5%;margin-right: 7%; text-align: center;'><textarea placeholder='Describa su sugerencia....'  style='border: #1094bc 2px solid; width: 100%; height: 120px;' readonly>"+sugerencias[idRandom]['descripcion']+"</textarea></ons-col></ons-row><br>");
+            $(".imgCal").attr('src',sugerencias[idRandom]['imagen']);
+          }else{
+            // Aqui podran ver el error que se genero
+            console.log(data['errores']['description']);
+          }
+        },
+        error:function(jqXHR,text_status,strError){ 
+          console.log(jqXHR);
+        }
       });
-
+      });
+                
     });
   
   </script>
@@ -390,6 +680,9 @@
      color:grey;
    }
        .starDos{
+     color:grey;
+   }
+       .starDosModal{
      color:grey;
    }
     input[type = "radio"]{
@@ -411,10 +704,19 @@
   .starDos:hover ~ label{
     color:orange;
   }
+      .starDosModal:hover{
+    color:orange;
+  }
+  .starDosModal:hover ~ label{
+    color:orange;
+  }
   .inputStar[type = "radio"]:checked ~ .star{
     color:orange;
   }
   .checkVal[type = "radio"]:checked ~ .starDos{
+    color:orange;
+  }
+   .checkValModal[type = "radio"]:checked ~ .starDosModal{
     color:orange;
   }
   .footer {
@@ -435,6 +737,9 @@
    text-align: center;
    background: #F2F2F2;
 }
+
+
+
   </style>
 </head>
 <body>
@@ -470,7 +775,7 @@
             Configuracion
           </ons-list-item>
           </a>
-          <a  href="#"  style="text-decoration: none; color: black;">
+          <a  onclick="cerrarSesion()"  style="text-decoration: none; color: black;">
             <ons-list-item tappable>
             Cerrar sesión
           </ons-list-item>
@@ -507,7 +812,7 @@
       </div>
        <div class="footer">
     <ons-row>
-      <ons-col ><ons-button style="width: 100%; left: 20%; background: #1094bc; color: white;">Aleatorio</ons-button></ons-col>
+      <ons-col ><ons-button class="btnAleatory" style="width: 100%; left: 20%; background: #1094bc; color: white;">Aleatorio</ons-button></ons-col>
       <ons-col style="text-align: center;"><ons-icon style="color: black;" size="35px" icon="md-plus-circle" onclick="fn.load('adirSug.html')"></ons-icon></ons-col>
     </ons-row>
   </div>
@@ -579,64 +884,43 @@
   </div>
     </ons-page>
   </template>
-  <template id="editSugerencia.html">
+      <template id="califSug.html">
     <ons-page>
       <ons-toolbar>
         <div class="left backHome">
            <ons-toolbar-button>
-            <ons-icon icon="fa-angle-left"></ons-icon>
-          </ons-toolbar-button>
-         
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
         </div>
         <div class="center">
-          Settings
+          Sugerencias
         </div>
         <div class="right">
            <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
+            <ons-icon icon="fa-bars"></ons-icon>
           </ons-toolbar-button>
         </div>
-      </ons-toolbar>
-      <div id="infoSugerencia">
-      </div>
-       <div class="footer-edit">
-      </div>
-    </ons-page>
-  </template>
-  <template id="califSug.html">
-    <ons-page>
-      <ons-toolbar>
-        <div class="left">
-          <ons-toolbar-button onclick="fn.open()">
-            <ons-icon icon="md-menu"></ons-icon>
-          </ons-toolbar-button>
-        </div>
-        <div class="center">
-          About
-        </div>
-      </ons-toolbar>
+      </ons-toolbar><br><br>
       <ons-row>
         <ons-col>
-          <div style="border: black 1px solid; height: 120px;">
-            <!--<img src="" style="width: 100%; height: 100%;">-->
+          <div align="center">
+            <ons-button onclick="showTemplateDialogImg()" style="width: 90%; height: 140px; background: transparent; border: #1094bc 2px solid;">
+              <img class="imgCal" src="imagenes/default.png" height="100%" width="100%">
+            </ons-button>
           </div>
         </ons-col>
       </ons-row><br>
       <ons-row>
-        <ons-col style="text-align: center;">
-          <label>Nombre sugerencia</label>
+        <ons-col style="margin-left: 5%;margin-right: 10%; text-align: center;">
+          <ons-input placeholder="Nombre de sugerencia" type="text" style="border:#1094bc 2px solid;width: 105%;" id="nameCal" readonly>
         </ons-col>
       </ons-row><br>
-      <ons-row>
-        <ons-col style="border: black 1px solid; height: 120px;">
-          <textarea style="width: 100%; height: 100%;" id="textTEST" placeholder="descripcion de sugerencia..."></textarea><br>
-          <ons-input type="text" class="putaVista" value="chanco" placeholder="Here..."></ons-input>
-        </ons-col>
-      </ons-row>
-      <div id="messiView">
-
-      </div> 
-      <!--<div class="footer">
+      <div id="descSug">
+        
+      </div>
+      <div class="traFunciona">
+      </div>
+      <div class="footer">
         <ons-row>
           <ons-col style="text-align: center;">
              <form>
@@ -655,12 +939,178 @@
               </form>
           </ons-col>
         </ons-row>
-      </div>-->
+      </div>
+        <ons-dialog id="my-dialog-star">
+    <div style="text-align: center; padding: 10px;">
+      <ons-row>
+        <ons-col style="text-align: right;"><ons-icon icon="md-close" size="20px" onclick="hideD('my-dialog-star')" ></ons-icon></ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+          <label>Modificar calificación</label>
+        </ons-col>
+      </ons-row>
+      <ons-row>
+        <ons-col style="text-align: center;">
+          <form>
+                  <p class="clasificacion">
+                    <input class="checkValModal" id="radio1" type="radio" name="estrellasDosModal" value="5">
+                    <label class="starDosModal" for="radio1">★</label>
+                    <input class="checkValModal"  id="radio2"  type="radio" name="estrellasDosModal" value="4">
+                    <label class="starDosModal" for="radio2">★</label>
+                    <input class="checkValModal" id="radio3" type="radio" name="estrellasDosModal" value="3">
+                    <label class="starDosModal" for="radio3">★</label>
+                    <input class="checkValModal" id="radio4" type="radio" name="estrellasDosModal" value="2">
+                    <label class="starDosModal" for="radio4">★</label>
+                    <input class="checkValModal" id="radio5" type="radio" name="estrellasDosModal" value="1">
+                    <label class="starDosModal" for="radio5">★</label>
+                  </p>
+              </form>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col><ons-button style="color: white; background: #1094bc; width: 100%;" id="readyCal">Listo</ons-button></ons-col>
+        <ons-col><ons-button style="color: white; background: #ED1919; width: 100%;" onclick="hideD('my-dialog-star')">Cancelar</ons-button></ons-col>
+      </ons-row>
+    </div>
+  </ons-dialog>
+    </ons-page>
+  </template>
+  <template id="editSugerencia.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left backHome">
+           <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Sugerencias
+        </div>
+        <div class="right">
+           <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar><br><br>
+      <div id="infoSugerencia">
+      </div>
+      <div class="footer-edit">
+      </div>
+      <ons-dialog id="my-dialog-img">
+    <div style="text-align: center; padding: 10px;">
+      <ons-row>
+        <ons-col style="text-align: right;"><ons-icon icon="md-close" size="20px" onclick="hideD('my-dialog-img')" ></ons-icon></ons-col>
+      </ons-row><br>
+      <ons-row>
+         <ons-col style="text-align: center;">
+          <label style="width: 100%;">Seleccionar imagen</label>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+          <img src="imagenes/accion.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+        <ons-col>
+          <img src="imagenes/tablet.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+      </ons-row>
+      <ons-row>
+        <ons-col>
+          <img src="imagenes/grupo.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+        <ons-col>
+          <img src="imagenes/responsabilidad.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+      </ons-row>
+    </div>
+  </ons-dialog>
     </ons-page>
   </template>
   <template id="adirSug.html">
     <ons-page>
-            <ons-toolbar>
+      <ons-toolbar>
+        <div class="left backHome">
+           <ons-toolbar-button>
+              <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
+            </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Sugerencias
+        </div>
+        <div class="right">
+           <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="fa-bars"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+      </ons-toolbar><br><br>
+      <ons-row>
+        <ons-col>
+          <div align="center">
+            <ons-button onclick="showTemplateDialogImg()" style="width: 90%; height: 140px; background: transparent; border: #1094bc 2px solid;">
+              <img class="imgADD" src="imagenes/default.png" height="100%" width="100%">
+            </ons-button>
+          </div>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col style="margin-left: 5%;margin-right: 10%; text-align: center;">
+          <ons-input placeholder="Nombre de sugerencia" type="text" style="border:#1094bc 2px solid;width: 105%;" id="nameSug">
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col style="margin-left: 5%;margin-right: 7%; text-align: center;">
+          <textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 2px solid; width: 100%; height: 120px;"></textarea>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+          <ons-button id="thisButton" class="btnMoti" btnTy="1" style="width: 80%;left: 10%; color: black; background: #FFFFFF;">
+          Motivación
+        </ons-button>
+      </ons-col>
+      <ons-col>
+        <ons-button id="thisButton-2" class="btnMoti" btnTy="2" style="width: 80%; left: 10%; color: black; background: #FFFFFF;">
+        Concentración
+      </ons-button>
+    </ons-col>
+  </ons-row>
+      <div class="footer">
+        <ons-row><ons-col style="text-align: center;"><ons-button class="adedSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>
+      </div>
+    <ons-dialog id="my-dialog-img">
+    <div style="text-align: center; padding: 10px;">
+      <ons-row>
+        <ons-col style="text-align: right;"><ons-icon icon="md-close" size="20px" onclick="hideD('my-dialog-img')" ></ons-icon></ons-col>
+      </ons-row><br>
+      <ons-row>
+         <ons-col style="text-align: center;">
+          <label style="width: 100%;">Seleccionar imagen</label>
+        </ons-col>
+      </ons-row><br>
+      <ons-row>
+        <ons-col>
+          <img src="imagenes/accion.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+        <ons-col>
+          <img src="imagenes/tablet.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+      </ons-row>
+      <ons-row>
+        <ons-col>
+          <img src="imagenes/grupo.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+        <ons-col>
+          <img src="imagenes/responsabilidad.png" class="imgSel" style="border:black 1px solid; width: 100%; height: 100%;"  >
+        </ons-col>
+      </ons-row>
+    </div>
+  </ons-dialog>
+    </ons-page>
+  </template>
+  <template id="sugeAleatory.html">
+    <ons-page>
+      <ons-toolbar>
         <div class="left backHome">
            <ons-toolbar-button>
             <ons-icon icon="fa-angle-left"></ons-icon>
@@ -675,10 +1125,27 @@
           </ons-toolbar-button>
         </div>
       </ons-toolbar>
-      <ons-row><ons-col><div style="border: black 1px solid; height: 120px;"><img class="imgSug" src="imge.png" style="width: 100%; height: 100%; border: #1094bc 1px solid;"></div></ons-col></ons-row><br><ons-row><ons-col style="text-align: center;"><ons-input id="nameSug" style="border: #1094bc 2px solid;" placeholder="Nombre de sugerencia"></ons-input></ons-col></ons-row><br><ons-row><ons-col><textarea class="descSug" placeholder="Describa su sugerencia...."  style="border: #1094bc 1px solid; width: 100%; height: 120px;"></textarea></ons-col></ons-row><br><ons-row><ons-col><ons-button class="btnMoti" btnTy="1" style="width: 90%;left: 5%;">Motivación</ons-button></ons-col><ons-col><ons-button class="btnMoti" btnTy="2" style="width: 90%; left: 5%;">Concentración</ons-button></ons-col></ons-row>
-      <div class="footer">
-        <ons-row><ons-col style="text-align: center;"><ons-button class="adedSugOn" style="width: 80%; background: #1094bc; color: white;">Agregar</ons-button></ons-col></ons-row>
-      </div>
+      <h1>Soy la sugerencia aleatoria</h1>
+      <ons-row>
+        <ons-col>
+          <div style="border: black 1px solid; height: 120px;">
+            <img class="imgAleatory" src="imagenes/default.png" style="width: 100%; height: 100%; border: #1094bc 1px solid;">
+          </div>
+        </ons-col>
+      </ons-row>
+      <br>
+      <ons-row>
+        <ons-col style="text-align: center;">
+          <label id="nameAleatory"></label>
+        </ons-input>
+        </ons-col>
+      </ons-row>
+        <br>
+        <ons-row>
+          <ons-col>
+            <label id="descAleatory" style="width: 100%; height: 120px;"></label>
+          </ons-col>
+          </ons-row>
     </ons-page>
   </template>
 <script src="js/app.js"></script>

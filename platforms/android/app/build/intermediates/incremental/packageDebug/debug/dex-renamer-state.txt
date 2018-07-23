@@ -1,4 +1,4 @@
-#Tue Jul 17 01:28:14 CLT 2018
-base.0=C\:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+#Tue Jul 17 18:57:35 CLT 2018
+base.0=C\:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 renamed.0=classes.dex
-file.0=C\:\\Users\\carol\\OneDrive\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex
+file.0=C\:\\Users\\Nicolas\\Documents\\PhoneGap\\DayToDay\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0\\classes.dex

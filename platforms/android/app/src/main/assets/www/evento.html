@@ -301,14 +301,14 @@
               $("#eterminados").html(""); 
               data['evento'].forEach(function(evento) {  
                 if (evento['estado']=='c') {
-                  $("#eterminados").append("<ons-row ><ons-col><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' id='btnSee' indexprop="+evento['id']+" onclick='showTemplateDialogTwo()'></ons-icon><br>Ver</ons-col><ons-col><ons-button style='background: #1094bc;' class='EventoUno' indexAtr="+evento['id']+">Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
+                  $("#eterminados").append("<ons-row ><ons-col style='margin-left: 10%'><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' id='btnSee' indexprop="+evento['id']+" onclick='showTemplateDialogTwo()'></ons-icon><br>Ver</ons-col><ons-col style='margin-right: 10%'><ons-button style='background: #1094bc;' class='EventoUno' indexAtr="+evento['id']+">Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
                 }
               });
             }else{
               $("#ependientes").html(""); 
               data['evento'].forEach(function(evento) {
                 if (evento['estado']=='p') {
-                  $("#ependientes").append("<ons-row ><ons-col><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' id='btnSee' onclick='showTemplateDialogTwo()' indexprop="+evento['id']+"></ons-icon><br>Ver</ons-col><ons-col><ons-button style='background: #1094bc;' class='EventoUno' indexAtr="+evento['id']+">Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
+                  $("#ependientes").append("<ons-row ><ons-col style='margin-left: 10%'><ons-icon icon='md-time' size='30px'></ons-icon></ons-col><ons-col>"+evento['nombre']+" <br><div style='font-size: 10px;'>"+evento['fecha']+"</div></ons-col><ons-col style='text-align: center;'><ons-icon icon='md-account' size='30px' id='btnSee' onclick='showTemplateDialogTwo()' indexprop="+evento['id']+"></ons-icon><br>Ver</ons-col><ons-col style='margin-right: 10%'><ons-button style='background: #1094bc;' class='EventoUno' indexAtr="+evento['id']+">Ver evento</ons-button></ons-col> </ons-row><br><br>"); 
                 }
               });
             }
@@ -531,9 +531,11 @@
         <ons-page>
       <ons-toolbar>
         <div class="left">
+          <a href="actividades.html">
             <ons-toolbar-button>
               <ons-icon icon="fa-angle-left" size="30px"></ons-icon>
             </ons-toolbar-button>
+          </a>
         </div>
         <div class="right">
           <ons-toolbar-button onclick="fn.open()">
@@ -695,10 +697,10 @@
       </ons-row><br><br><br><br>
       <ons-row>
         <ons-col>
-        <ons-button id="confirmarB" class="btnVoy" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-check" size="20px" ></ons-icon> Voy</ons-button>
+        <ons-button id="confirmarB" class="btnVoy" style="background: #1094bc;width: 80%;margin-left: 15%;"><ons-icon style="color: #FFFFFF;" icon="md-check" size="20px" ></ons-icon> Voy</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button id="rechazarB" style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px"  ></ons-icon> No voy</ons-button>
+          <ons-button id="rechazarB" style="background: #ED1919;width: 80%;"><ons-icon style="color: #FFFFFF;" icon="md-close" size="20px"  ></ons-icon> No voy</ons-button>
         </ons-col>
       </ons-row>
       </ons-page>
@@ -776,10 +778,10 @@
       </ons-row><br><br><br><br><br><br><br><br>
       <ons-row>
         <ons-col>
-        <ons-button id="btnGuardarEvento" onclick="fn.load('home.html')" class="cargarPendientes" style="background: #1094bc; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;">Guardar</ons-button>
+        <ons-button id="btnGuardarEvento" onclick="fn.load('home.html')" class="cargarPendientes" style="background: #1094bc;width: 80%;margin-left: 15%;"><ons-icon style="color: #FFFFFF;">Guardar</ons-button>
         </ons-col>
         <ons-col>
-          <ons-button class="cargarPendientes" onclick="fn.load('home.html')" style="background: #ED1919; color:#FFFFFF; width: 90%; padding-left: 10%; padding-right: 5%;">Cancelar</ons-button>
+          <ons-button class="cargarPendientes" onclick="fn.load('home.html')" style="background: #ED1919;width: 80%;">Cancelar</ons-button>
         </ons-col>
       </ons-row>
       </ons-page>

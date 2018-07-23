@@ -8,6 +8,14 @@
   <script src="js/jquery.min.js"></script>
   <script src="cordova.js"></script>
   <script type="text/javascript">
+    // Validador de usuario
+    var usuario = window.localStorage.getItem("idUsuario");
+    if (usuario != null) {
+      var idUsuario = usuario.split("~");
+      var usuario_id = parseInt(idUsuario[1]);
+    }else{
+        window.location.href = "Login.html";
+    }
     $(document).ready(function() {
       /*
       Llamadas a la tabla usuarios de la base de datos

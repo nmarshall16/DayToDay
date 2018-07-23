@@ -317,7 +317,7 @@
                 }else{
                   nombre = "<label> "+actividad['nombre']+"</label>";
                 }
-                $("#aObligatorias").append("<ons-row><a onclick='verActividad("+actividad['id']+")'><ons-col style='margin-left: 10%'><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+                $("#aObligatorias").append("<ons-row><a style='margin-left: 10%' onclick='verActividad("+actividad['id']+")'><ons-col><ons-icon icon='fa-briefcase' size='30px'></ons-icon>"+nombre+"</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
               }  
             }
             });
@@ -360,7 +360,7 @@
                 }else{
                   nombre = "<label> "+actividad['nombre']+"</label>";
                 }
-                $("#aEntretencion").append("<ons-row><a onclick='verActividad("+actividad['id']+")'><ons-col style='margin-left: 10%'><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
+                $("#aEntretencion").append("<ons-row><a style='margin-left: 10%' onclick='verActividad("+actividad['id']+")'><ons-col><ons-icon icon='fa-futbol-o' size='30px'></ons-icon>"+nombre+"</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>");
               } 
             }
             });
@@ -409,7 +409,7 @@
             }else{
               nombre = "<label> "+actividad['nombre']+"</label>";
             }
-            var elemento = "<ons-row><a onclick='verActividad("+actividad['id']+")'><ons-col style='margin-left: 10%'>";
+            var elemento = "<ons-row><a style='margin-left: 10%' onclick='verActividad("+actividad['id']+")'><ons-col>";
             elemento += icono;
             elemento += nombre;
             elemento += "</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";

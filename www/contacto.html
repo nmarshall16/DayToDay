@@ -96,7 +96,7 @@
             type: 'post',
               data: {
               'metodo': 'borrarContactos',
-              'usuario_id': 7,
+              'usuario_id': usuario_id,
               'contacto_id': contactID,
               },
             crossDomain: true,
@@ -135,7 +135,7 @@
         type: 'post',
           data: {
           'metodo': 'verContactos',
-          'usuario_id': 7,
+          'usuario_id': usuario_id,
           },
         crossDomain: true,
         cache: false,                                        
@@ -184,7 +184,7 @@
         type: 'post',
          data: {
           'metodo': 'buscarContacto',
-          'usuario_id': 7,
+          'usuario_id': usuario_id,
           'buscar': texto,
           },
         crossDomain: true,
@@ -232,7 +232,7 @@
         type: 'post',
           data: {
           'metodo': 'verContactos',
-          'usuario_id': 7,
+          'usuario_id': usuario_id,
           },
         crossDomain: true,
         cache: false,                                        
@@ -277,7 +277,7 @@
         type: 'post',
           data: {
           'metodo': 'buscarContacto',
-          'usuario_id': 7,
+          'usuario_id': usuario_id,
           'buscar': txtPROP,
           },
         crossDomain: true,
@@ -302,7 +302,7 @@
         type: 'post',
           data: {
           'metodo': 'agregarContacto',
-          'usuario_id': 7,
+          'usuario_id': usuario_id,
           'contacto_id': $("#textID").val(),
           },
         crossDomain: true,

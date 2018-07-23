@@ -48,6 +48,9 @@
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
+            $("#hola").show('slow/400/fast', function() {
+              
+            });
           }
         },
         error:function(jqXHR,text_status,strError){ 
@@ -394,8 +397,13 @@
           // Con esta consulta se valida que no haya habido ningun problema con la consulta
           if(!data['errores']['error']) {
             $("#actividades").html("");
-            data['actividades'].forEach(function(actividad) {
-            if (actividad['clase'] != "f") {
+            var actividades = [];
+            data['actividades'].forEach(function(activi) {
+            if (activi['clase'] != "f") {
+              actividades.push(activi);
+            }
+            });
+            actividades.forEach(function(actividad) {
             var icono = '';
             var nombre = '';
             // Se asigana el icono a la actividad obligitaria
@@ -413,14 +421,14 @@
             elemento += icono;
             elemento += nombre;
             elemento += "</ons-col></a><ons-col style='margin-right: 10%; text-align: right;'><ons-button style='background: #1094bc;' class='actualizarE' valor='"+actividad['estado']+"' identificador='"+actividad['id']+"'><ons-icon icon='fa-check' size='20px'></ons-icon></ons-button></ons-col></ons-row><br><br>";
-            $("#actividades").append(elemento); 
+            $("#actividades").append(elemento);
+
+            if (validacion) {
+              progreso(actividades.length, data['actividades'], true);
+            }else{
+              progreso(actividades.length, data['actividades']);
             }
             });
-            if (validacion) {
-              progreso(data['actividades'].length, data['actividades'], true);
-            }else{
-              progreso(data['actividades'].length, data['actividades']);
-            }
           }else{
             // Aqui podran ver el error que se genero
             console.log(data['errores']['description']);
